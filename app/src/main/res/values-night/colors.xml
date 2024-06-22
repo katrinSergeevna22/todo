@@ -6,17 +6,15 @@
     <color name="green">#34C759</color>
     <color name="blue">#007AFF</color>
     <color name="grey">#8E8E93</color>
-    <color name="primaryColor">#000000</color>
-    <color name="secondaryColor">#99000000</color>
-    <color name="tertiaryColor">#4D000000</color>
-    <color name="disableColor">#26000000</color>
+    <color name="primaryColor">#FFFFFF</color>
+    <color name="secondaryColor">#99FFFFFF</color>
+    <color name="tertiaryColor">#66FFFFFF</color>
+    <color name="disableColor">#26FFFFFF</color>
     <color name="grayColor">#8E8E93</color>
-    <color name="grayLightColor">#D1D1D6</color>
-    <color name="separatorColor">#33000000</color>
-    <color name="overlayColor">#0F000000</color>
-    <color name="backPrimaryColor">#F7F6F2</color>
+    <color name="grayLightColor">#48484A</color>
+    <color name="separatorColor">#33FFFFFF</color>
+    <color name="overlayColor">#52000000</color>
+    <color name="backPrimaryColor">#E7F6F2</color>
     <color name="backSecondaryColor">#FFFFFF</color>
     <color name="backElevatedColor">#FFFFFF</color>
-
-
 </resources>
