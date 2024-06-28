@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/disableColor"
+    tools:context=".CalendarFragment">
+
+    <FrameLayout
+        android:id="@+id/calendarContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="82dp"
+        android:background="@color/white">
+
+        <CalendarView
+            android:id="@+id/calendarView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/btnCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/calendarContainer"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentBottom="false"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="0dp"
+        android:layout_toStartOf="@+id/btnDone"
+        android:backgroundTint="#00FFFFFF"
+        android:fontFamily="@font/roboto_regular"
+        android:text="Отмена"
+        android:textAllCaps="true"
+        android:textColor="@color/blue" />
+
+    <Button
+        android:id="@+id/btnDone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/calendarContainer"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="false"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#00FFFFFF"
+        android:text="Готово"
+        android:textAllCaps="true"
+        android:textColor="@color/blue"
+        android:textSize="14sp" />
+
+</RelativeLayout>

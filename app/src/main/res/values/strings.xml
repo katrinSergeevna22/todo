@@ -1,3 +1,23 @@
 <resources>
-    <string name="app_name">To do List</string>
+    <string name="app_name">ToDo App</string>
+
+    <string name="low">Низкий</string>
+    <string name="ordinary">Нет</string>
+    <string name="urgentInArray">!! Высокий</string>
+    <string name="urgent">Высокий</string>
+    <string name="my_case">Мои дела</string>
+    <string name="done">Выполнено</string>
+    <string name="importance">Важность</string>
+    <string name="make_it_to">Сделать до</string>
+    <string name="delete">Удалить</string>
+    <string name="save">Сохранить</string>
+    <string name="hintForEditMultiText">Что надо сделать...</string>
+
+    <string-array name="relevanceOfTodo">
+        <item>@string/ordinary</item>
+        <item>@string/low</item>
+        <item>@string/urgentInArray</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
