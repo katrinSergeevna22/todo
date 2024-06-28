@@ -1,4 +1,4 @@
-package com.example.todoapp
+package com.example.todolist.presentation.ui
 
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -18,13 +18,22 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.todoapp.adapter_todo_item.TodoAdapter
+import com.example.todolist.MainActivity
 import com.example.todolist.R
+import com.example.todolist.presentation.adapter_todo_item.TodoAdapter
+import com.example.todolist.data.TodoItemsRepository
 import com.example.todolist.databinding.FragmentListBinding
+import com.example.todolist.domain.TodoItem
+//import com.example.todolist.presentation.ui.theme.MyAppTheme
+import com.example.todolist.presentation.viewModel.ListViewModel
+import com.example.todolist.presentation.viewModel.AddTodoItemViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import androidx.activity.compose.setContent
+import androidx.core.app.ComponentActivity
 
 class ListFragment : Fragment() {
+    /* View
     lateinit var binding: FragmentListBinding
     private val dataRepository = TodoItemsRepository.getInstance()
     var listTodoItemAll = mutableListOf<TodoItem>()
@@ -48,6 +57,8 @@ class ListFragment : Fragment() {
 
         viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
         addViewModel = ViewModelProvider(this).get(AddTodoItemViewModel::class.java)
+
+
 
 
         adapter = TodoAdapter({
@@ -104,9 +115,12 @@ class ListFragment : Fragment() {
                         val item = adapter.currentList[position]
                         lifecycleScope.launch {
                             viewModel.removeItem(item)
+                            /*
                             viewModel.getListData().value?.let { items ->
                                 updateList(items)
                             }
+
+                             */
                             adapter.notifyDataSetChanged()
                         }
                         //adapter.notifyDataSetChanged()
@@ -118,9 +132,12 @@ class ListFragment : Fragment() {
                         val item = adapter.currentList[position]
                         lifecycleScope.launch {
                             viewModel.editExecution(item)
+                            /*
                             viewModel.getListData().value?.let { items ->
                                 updateList(items)
                             }
+
+                             */
                             adapter.notifyDataSetChanged()
                         }
                         //onDeleteClicked(item)
@@ -208,6 +225,8 @@ class ListFragment : Fragment() {
         binding.apply {
             rcView.layoutManager = LinearLayoutManager(activity as MainActivity)
             rcView.adapter = adapter
+
+            /*
             var getItems = viewModel.getListDataFlag()
             viewModel.getListData().observe(viewLifecycleOwner, Observer {list->
 
@@ -220,6 +239,13 @@ class ListFragment : Fragment() {
             }
 
 
+             */
+
+            lifecycleScope.launchWhenStarted {
+                viewModel.getListData().collect { items ->
+                    adapter.submitList(items)
+                }
+            }
 
             val headerObserver = object : ViewTreeObserver.OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
@@ -252,19 +278,27 @@ class ListFragment : Fragment() {
                 flag = !isVisibilityOnNow
                 viewModel.isVisibilityOn = !isVisibilityOnNow
                 if (!isVisibilityOnNow){
-                    ibVisibilityLarge.setImageDrawable(ContextCompat.getDrawable((activity as MainActivity), R.drawable.ic_visibility))
+                    ibVisibilityLarge.setImageDrawable(ContextCompat.getDrawable((activity as MainActivity),
+                        R.drawable.ic_visibility
+                    ))
                     //getItems = viewModel.getListData()
+                    /*
                     viewModel.getListData().value?.let { items ->
                         updateList(items)
                     }
+                     */
                 //adapter.submitList(adapter.currentList.filter { !it.executionFlag })
                 }
                 else{
                     //getItems = viewModel.getListDataFlag()
-                    ibVisibilityLarge.setImageDrawable(ContextCompat.getDrawable((activity as MainActivity), R.drawable.ic_visibility_off))
+                    ibVisibilityLarge.setImageDrawable(ContextCompat.getDrawable((activity as MainActivity),
+                        R.drawable.ic_visibility_off
+                    ))
+                    /*
                     viewModel.getListData().value?.let { items ->
                         updateList(items)
                     }
+                     */
                     //adapter.submitList(listTodoItemAll)
                 }
 
@@ -274,17 +308,26 @@ class ListFragment : Fragment() {
                 val isVisibilityOnNow = viewModel.isVisibilityOn
                 viewModel.isVisibilityOn = !isVisibilityOnNow
                 if (!isVisibilityOnNow){
-                    ibVisibilitySmall.setImageDrawable(ContextCompat.getDrawable((activity as MainActivity), R.drawable.ic_visibility))
+                    ibVisibilitySmall.setImageDrawable(ContextCompat.getDrawable((activity as MainActivity),
+                        R.drawable.ic_visibility
+                    ))
+                    /*
                     viewModel.getListData().value?.let { items ->
                         updateList(items)
                     }
+
+                     */
                 //adapter.submitList(adapter.currentList.filter { !it.executionFlag })
                 }
                 else{
-                    ibVisibilitySmall.setImageDrawable(ContextCompat.getDrawable((activity as MainActivity), R.drawable.ic_visibility_off))
+                    ibVisibilitySmall.setImageDrawable(ContextCompat.getDrawable((activity as MainActivity),
+                        R.drawable.ic_visibility_off
+                    ))
+                    /*
                     viewModel.getListData().value?.let { items ->
                         updateList(items)
                     }
+                     */
                 //adapter.submitList(listTodoItemAll)
                 }
 
@@ -324,6 +367,8 @@ class ListFragment : Fragment() {
         ) + " - " + (list.size - list.filter { !it.executionFlag }.size)
 
     }
+
+     */
 
 }
 

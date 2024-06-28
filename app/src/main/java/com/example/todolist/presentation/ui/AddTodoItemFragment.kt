@@ -1,4 +1,4 @@
-package com.example.todoapp
+package com.example.todolist.presentation.ui
 
 import android.graphics.PorterDuff
 import android.os.Bundle
@@ -11,8 +11,14 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import com.example.todolist.MainActivity
 import com.example.todolist.R
+import com.example.todolist.data.LocalDataStore
 import com.example.todolist.databinding.FragmentAddTodoItemBinding
+import com.example.todolist.domain.TodoItem
+import com.example.todolist.presentation.viewModel.AddTodoItemViewModel
+import com.example.todolist.presentation.viewModel.ListViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -85,8 +91,12 @@ val listViewModel = ListViewModel.newInstance()
 
             Log.d("here", todoItem.toString())
             if (todoItem == null){
-                tvDelete.setTextColor(ContextCompat.getColor((activity as MainActivity), R.color.disableColor))
-                ivDelete.setColorFilter(ContextCompat.getColor((activity as MainActivity), R.color.disableColor),
+                tvDelete.setTextColor(ContextCompat.getColor((activity as MainActivity),
+                    R.color.disableColor
+                ))
+                ivDelete.setColorFilter(ContextCompat.getColor((activity as MainActivity),
+                    R.color.disableColor
+                ),
                     PorterDuff.Mode.MULTIPLY);
 
                 Log.d("here2", todoItem.toString())
@@ -111,7 +121,9 @@ val listViewModel = ListViewModel.newInstance()
                 )
 
                 Log.d("AddToDoItem3", newTodoItem.toString())
-                listViewModel.addItem(newTodoItem)
+                lifecycleScope.launchWhenStarted {
+                    listViewModel.addItem(newTodoItem)
+                }
                 //(parentFragment as ListFragment).adapter.notifyDataSetChanged()
                 hideKeyboard()
                 requireActivity().supportFragmentManager.popBackStack()
@@ -158,7 +170,9 @@ val listViewModel = ListViewModel.newInstance()
                         dateOfEditing = dateOfEdit
                     )
 
-                    listViewModel.editItem(newTodoItem)
+                    lifecycleScope.launchWhenStarted {
+                        listViewModel.editItem(newTodoItem)
+                    }
                     parentFragmentManager.popBackStack()
                 }
             }
@@ -243,7 +257,9 @@ val listViewModel = ListViewModel.newInstance()
                 if (todoItem == null) {
 
                 } else {
-                    listViewModel.removeItem(todoItem ?: TodoItem())
+                    lifecycleScope.launchWhenStarted {
+                        listViewModel.removeItem(todoItem ?: TodoItem())
+                    }
                     parentFragmentManager.popBackStack()
                 }
 

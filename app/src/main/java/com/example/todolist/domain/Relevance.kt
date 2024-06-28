@@ -1,14 +1,14 @@
-package com.example.todoapp
+package com.example.todolist.domain
 
 enum class Relevance {
-    LOW {
-        override fun getRelevance() : String{
-            return "Низкий"
-        }
-    },
     ORDINARY {
         override fun getRelevance() : String{
             return "Нет"
+        }
+    },
+    LOW {
+        override fun getRelevance() : String{
+            return "Низкий"
         }
     },
     URGENT {

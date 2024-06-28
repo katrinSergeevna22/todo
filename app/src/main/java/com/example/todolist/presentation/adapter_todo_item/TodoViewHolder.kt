@@ -1,10 +1,10 @@
-package com.example.todoapp.adapter_todo_item
+package com.example.todolist.presentation.adapter_todo_item
 
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.example.todoapp.Relevance
-import com.example.todoapp.TodoItem
+import com.example.todolist.domain.Relevance
+import com.example.todolist.domain.TodoItem
 import com.example.todolist.R
 import com.example.todolist.databinding.TodoItemBinding
 

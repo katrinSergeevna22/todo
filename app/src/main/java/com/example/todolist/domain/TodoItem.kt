@@ -1,4 +1,4 @@
-package com.example.todoapp
+package com.example.todolist.domain
 
 import android.os.Parcel
 import android.os.Parcelable
