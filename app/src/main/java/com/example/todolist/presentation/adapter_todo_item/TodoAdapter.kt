@@ -1,9 +1,9 @@
-package com.example.todoapp.adapter_todo_item
+package com.example.todolist.presentation.adapter_todo_item
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import com.example.todoapp.TodoItem
+import com.example.todolist.domain.TodoItem
 import com.example.todolist.databinding.TodoItemBinding
 
 class TodoAdapter(

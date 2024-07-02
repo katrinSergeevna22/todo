@@ -1,5 +1,7 @@
-package com.example.todoapp
+package com.example.todolist.data
 
+import com.example.todolist.domain.Relevance
+import com.example.todolist.domain.TodoItem
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -22,6 +24,7 @@ object LocalDataStore {
         list.add(TodoItem("11", "Посмотреть головоломку 2", Relevance.ORDINARY.getRelevance(), null,false, date, null))
         list.add(TodoItem("12", "Заказать вентилятор", Relevance.ORDINARY.getRelevance(), null,false, date, null))
         list.add(TodoItem("13", "Почитать про дресировку собак", Relevance.LOW.getRelevance(), null,false, date, null))
+        listOfFalseFlag.addAll(list)
     }
 }
     /*

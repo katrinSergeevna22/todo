@@ -1,7 +1,9 @@
-package com.example.todoapp
+package com.example.todolist.presentation.viewModel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.todolist.data.TodoItemsRepository
+import com.example.todolist.domain.TodoItem
 
 class AddTodoItemViewModel : ViewModel() {
     companion object {
@@ -22,8 +24,8 @@ class AddTodoItemViewModel : ViewModel() {
     private val dataRepository = TodoItemsRepository.getInstance()
     val viewModel = ListViewModel()
 
-    fun addItem(item: TodoItem) {
-        dataRepository.addItem(item)
+    suspend fun addItem(item: TodoItem) {
+        dataRepository.addTodoItem(item)
     }
 
 
