@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/disableColor"
-    tools:context=".presentation.ui.CalendarFragment">
+    tools:context=".presentation.ui.view.CalendarFragment">
 
     <FrameLayout
         android:id="@+id/calendarContainer"

@@ -1,21 +1,33 @@
 <resources>
     <string name="app_name">ToDo App</string>
-
-    <string name="low">Низкий</string>
+    <string name="name">"ToDoPrefs"</string>
+    <string name="lowRu">Низкий</string>
     <string name="ordinary">Нет</string>
     <string name="urgentInArray">!! Высокий</string>
     <string name="urgent">Высокий</string>
+
+    <string name="low">low</string>
+    <string name="basic">basic</string>
+    <string name="important">important</string>
+
     <string name="my_case">Мои дела</string>
     <string name="done">Выполнено</string>
     <string name="importance">Важность</string>
     <string name="make_it_to">Сделать до</string>
     <string name="delete">Удалить</string>
+    <string name="update">Обновить</string>
+    <string name="repeat">Повторить</string>
     <string name="save">СОХРАНИТЬ</string>
     <string name="hintForEditMultiText">Что надо сделать...</string>
+    <string name="textForEmptyToast">Пожалуйста, введите описание дела</string>
+
+    <string name="descriptionButtonReady">Кнопка готовности дела</string>
+    <string name="descriptionButtonDelete">Кнопка удалить</string>
+    <string name="descriptionExcUpdate">При обновлении: ошибка ввода-вывода:</string>
 
     <string-array name="relevanceOfTodo">
         <item>@string/ordinary</item>
-        <item>@string/low</item>
+        <item>@string/lowRu</item>
         <item>@string/urgentInArray</item>
     </string-array>
     <!-- TODO: Remove or change this placeholder text -->

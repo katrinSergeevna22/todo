@@ -1,84 +1,53 @@
 package com.example.todolist.data
 
 import com.example.todolist.domain.Relevance
-import com.example.todolist.domain.TodoItem
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import com.example.todolist.domain.model.TodoItem
+import kotlinx.coroutines.flow.MutableStateFlow
+import java.util.Calendar
+import java.util.UUID
 
 object LocalDataStore {
     val list = mutableListOf<TodoItem>()
-    val listOfFalseFlag = mutableListOf<TodoItem>()
-    init {
-        val date = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
-        list.add(TodoItem("1", "Купить пальто", Relevance.ORDINARY.getRelevance(), null,false, date, null))
-        list.add(TodoItem("2", "Сходить к стоматологу", Relevance.URGENT.getRelevance(), null,false, date, null))
-        list.add(TodoItem("3", "Купить подарок дяде на день рождения, в подарок он хочет просто деньки в красивом конверте", Relevance.ORDINARY.getRelevance(), "1 January 2025",false, date, null))
-        list.add(TodoItem("4", "Нужно начать ходить в спортзал, для начала купить себе абонимент, попробовать походить на занятия, если понадобится, то можно будет задуматься о тренере", Relevance.ORDINARY.getRelevance(), null,false, date, null))
-        list.add(TodoItem("5", "Сходить в недавно открывшееся азиатское кафе", Relevance.LOW.getRelevance(), null,false, date, null))
-        list.add(TodoItem("6", "Отвезти собаку на груминг", Relevance.ORDINARY.getRelevance(), "23 July 2024",false, date, null))
-        list.add(TodoItem("7", "Купить что-то интересное по подарочному сертификату, а то он скоро истечет, а друзья так старались меня порадовать", Relevance.ORDINARY.getRelevance(), null,false, date, null))
-        list.add(TodoItem("8", "Составить расписание ближайших дней, чтобы ничего не забыть", Relevance.LOW.getRelevance(), null,false, date, null))
-        list.add(TodoItem("9", "Сходить с сестрой в кино", Relevance.URGENT.getRelevance(), "30 June 2024",false, date, null))
-        list.add(TodoItem("10", "Продать ненужный скейт", Relevance.ORDINARY.getRelevance(), null,false, date, null))
-        list.add(TodoItem("11", "Посмотреть головоломку 2", Relevance.ORDINARY.getRelevance(), null,false, date, null))
-        list.add(TodoItem("12", "Заказать вентилятор", Relevance.ORDINARY.getRelevance(), null,false, date, null))
-        list.add(TodoItem("13", "Почитать про дресировку собак", Relevance.LOW.getRelevance(), null,false, date, null))
-        listOfFalseFlag.addAll(list)
-    }
-}
-    /*
-    private val _list = MutableStateFlow<List<TodoItem>>(emptyList())
-    override fun getList(): Flow<List<TodoItem>> = _list.asStateFlow()
+    val stateFlow = MutableStateFlow<List<TodoItem>>(list)
 
     init {
-        createTodoItems()
-    }
-    private fun createTodoItems(){
-        val newList = mutableListOf<TodoItem>()
-        val date = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
+        //val date = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
+        val date = Calendar.getInstance().timeInMillis
+        //val date = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
+        /*
+        list.add(TodoItem(UUID.randomUUID(), "Купить пальто", Relevance.ORDINARY.getRelevance(), null,false, date, null))
+        list.add(TodoItem(UUID.randomUUID(),"Сходить к стоматологу", Relevance.URGENT.getRelevance(), null,false, date, null))
+        list.add(TodoItem(UUID.randomUUID(),"Купить подарок дяде на день рождения, в подарок он хочет просто деньги в красивом конверте", Relevance.ORDINARY.getRelevance(), date,false, date, null))
+        list.add(TodoItem(UUID.randomUUID(),"Нужно начать ходить в спортзал, для начала купить себе абонимент, попробовать походить на занятия, если понадобится, то можно будет задуматься о тренере", Relevance.ORDINARY.getRelevance(), null,false, date, null))
+        list.add(TodoItem(UUID.randomUUID(),"Сходить в недавно открывшееся азиатское кафе", Relevance.LOW.getRelevance(), null,false, date, null))
+        list.add(TodoItem(UUID.randomUUID(),"Отвезти собаку на груминг", Relevance.ORDINARY.getRelevance(), date,false, date, null))
+        list.add(TodoItem(UUID.randomUUID(),"Купить что-то интересное по подарочному сертификату, а то он скоро истечет, а друзья так старались меня порадовать", Relevance.ORDINARY.getRelevance(), null,false, date, null))
+        list.add(TodoItem(UUID.randomUUID(),"Составить расписание ближайших дней, чтобы ничего не забыть", Relevance.LOW.getRelevance(), null,false, date, null))
+        list.add(TodoItem(UUID.randomUUID(),"Сходить с сестрой в кино", Relevance.URGENT.getRelevance(), date,false, date, null))
+        list.add(TodoItem(UUID.randomUUID(), "Продать ненужный скейт", Relevance.ORDINARY.getRelevance(), null,false, date, null))
+        list.add(TodoItem(UUID.randomUUID(), "Посмотреть головоломку 2", Relevance.ORDINARY.getRelevance(), null,false, date, null))
+        list.add(TodoItem(UUID.randomUUID(), "Заказать вентилятор", Relevance.ORDINARY.getRelevance(), null,false, date, null))
+        list.add(TodoItem(UUID.randomUUID(), "Почитать про дресировку собак", Relevance.LOW.getRelevance(), null,false, date, null))
 
-        newList.add(TodoItem("1", "Купить что-то", Relevance.ORDINARY.getRelevance(), null,false, date, null))
-        newList.add(TodoItem("2", "Купить что-то", Relevance.ORDINARY.getRelevance(), null,false, date, null))
-        newList.add(TodoItem("3", "Купить что-то, где-то, зачем-то, но зачем не очень понятно", Relevance.ORDINARY.getRelevance(), "1 января 2025",false, date, null))
-        newList.add(TodoItem("4", "Купить что-то, где-то, зачем-то, но зачем не очень понятно, но точно чтобы показать как обрезается текст", Relevance.ORDINARY.getRelevance(), null,false, date, null))
-        newList.add(TodoItem("5", "Купить что-то", Relevance.LOW.getRelevance(), null,false, date, null))
-        newList.add(TodoItem("6", "Купить что-то", Relevance.URGENT.getRelevance(), null,false, date, null))
-        newList.add(TodoItem("1", "Купить что-то", Relevance.ORDINARY.getRelevance(), null,false, date, null))
-        newList.add(TodoItem("2", "Купить что-то", Relevance.ORDINARY.getRelevance(), null,false, date, null))
-        newList.add(TodoItem("3", "Купить что-то, где-то, зачем-то, но зачем не очень понятно", Relevance.ORDINARY.getRelevance(), null,false, date, null))
-        newList.add(TodoItem("4", "Купить что-то, где-то, зачем-то, но зачем не очень понятно, но точно чтобы показать как обрезается текст, что-то на экране он плохо образается", Relevance.ORDINARY.getRelevance(), null,false, date, null))
-        newList.add(TodoItem("5", "Купить что-то", Relevance.LOW.getRelevance(), null,false, date, null))
-        newList.add(TodoItem("6", "Купить что-то", Relevance.URGENT.getRelevance(), null,false, date, null))
-        newList.add(TodoItem("1", "Купить что-то", Relevance.ORDINARY.getRelevance(), null,false, date, null))
-        newList.add(TodoItem("2", "Купить что-то", Relevance.ORDINARY.getRelevance(), null,false, date, null))
-        newList.add(TodoItem("3", "Купить что-то, где-то, зачем-то, но зачем не очень понятно", Relevance.ORDINARY.getRelevance(), null,false, date, null))
-        newList.add(TodoItem("4", "Купить что-то, где-то, зачем-то, но зачем не очень понятно, но точно чтобы показать как обрезается текст", Relevance.ORDINARY.getRelevance(), null,false, date, null))
-        newList.add(TodoItem("5", "Купить что-то", Relevance.LOW.getRelevance(), null,false, date, null))
-        newList.add(TodoItem("6", "Купить что-то", Relevance.URGENT.getRelevance(), null,false, date, null))
+         */
 
-        _list.value = newList
     }
-    override suspend fun addItem(item: TodoItem) {
-        _list.value = _list.value + item
-        Log.d("FlowLocalDataStore", _list.value.toString())
+    fun addTodoItem(item: TodoItem){
+        list += item
     }
-
-    override suspend fun editItem(index: String, newItem: TodoItem) {
-        val updatedList = _list.value.toMutableList()
-        //updatedList[index] = newItem
-        _list.value = updatedList
+    fun removeTodoItem(item: TodoItem){
+        list -= item
     }
-
-    override suspend fun editItemParameter(index: String, newParameter: String) {
-        val updatedList = _list.value.toMutableList()
-        //updatedList.filter {it.id == index} = updatedList.filter { it.id == index }.copy(newParameter)
-        _list.value = updatedList
-    }
-
-    override suspend fun removeItem(item: TodoItem) {
-        _list.value = _list.value - item
+    fun editTodoItem(newItem: TodoItem){
+        list.forEach {
+            if (newItem.id == it.id) {
+                it.text = newItem.text
+                it.relevance = newItem.relevance
+                it.deadline = newItem.deadline
+                it.executionFlag = newItem.executionFlag
+                it.dateOfEditing = newItem.dateOfEditing
+                it.deadline = newItem.deadline
+            }
+        }
     }
 }
-
-     */

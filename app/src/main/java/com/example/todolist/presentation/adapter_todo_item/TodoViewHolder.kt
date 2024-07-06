@@ -4,10 +4,11 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.domain.Relevance
-import com.example.todolist.domain.TodoItem
+import com.example.todolist.domain.model.TodoItem
 import com.example.todolist.R
 import com.example.todolist.databinding.TodoItemBinding
-
+import com.example.todolist.domain.textName
+/* Осталось с реализации на View
 class TodoViewHolder(
     private val binding: TodoItemBinding,
     private val onInfoClicked: (TodoItem) -> Unit,
@@ -27,7 +28,7 @@ class TodoViewHolder(
                 onInfoClicked(todoItem)
             }
             tvTextOfTodoItem.text = todoItem.text
-            if (todoItem.relevance == Relevance.URGENT.getRelevance()) {
+            if (todoItem.relevance == Relevance.URGENT.textName(itemView.context)) {
                 ibReadlinessFlag.setImageDrawable(
                     ContextCompat.getDrawable(
                         itemView.context,
@@ -43,7 +44,7 @@ class TodoViewHolder(
                         R.drawable.ic_readiness_flag_normal
                     )
                 )
-                if (todoItem.relevance == Relevance.LOW.getRelevance()) {
+                if (todoItem.relevance == Relevance.LOW.textName(itemView.context)) {
                     tvTextOfTodoItem.setCompoundDrawablesWithIntrinsicBounds(
                         R.drawable.ic_arrow_down,
                         0,
@@ -62,7 +63,7 @@ class TodoViewHolder(
                 )
             }
             if (todoItem.deadline != null){
-                tvDateTodoItem.text = todoItem.deadline
+                tvDateTodoItem.text = todoItem.deadline.toString()
             }
             else{
                 tvDateTodoItem.visibility = View.GONE
@@ -76,3 +77,5 @@ class TodoViewHolder(
         binding.root.setBackgroundColor(color)
     }
 }
+
+ */

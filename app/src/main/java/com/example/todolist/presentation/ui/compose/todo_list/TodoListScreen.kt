@@ -1,22 +1,21 @@
-package com.example.todolist.presentation.ui.compose
+package com.example.todolist.presentation.ui.compose.todo_list
 
 import android.annotation.SuppressLint
 import android.util.Log
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 
@@ -32,7 +31,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.todolist.R
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
@@ -40,13 +39,14 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavHostController
 import com.example.todolist.presentation.ui.theme.Colors
 import com.example.todolist.presentation.viewModel.ListViewModel
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.zIndex
+import java.util.UUID
 
 @SuppressLint("StaticFieldLeak")
 
@@ -56,43 +56,26 @@ import com.example.todolist.presentation.viewModel.ListViewModel
 @Composable
 fun TodoListScreen(
     viewModel: ListViewModel,
-    navToAdd: (String?) -> Unit,
+    navToAdd: (UUID?) -> Unit,
 ) {
 
     val scrollBehavior =
-        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
-    //val todoList by viewModel.todoList.collectAsState()
-    //val isVisibilityOn by viewModel.isVisibilityOnFlow.collectAsState()
+        TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
-    val todoItemScreenUiState = viewModel.todoItemsScreenUiState.collectAsState()
-    //val todoList by todoItemScreenUiState.value.currentTodoItemList
+    val todoItemScreenUiState = viewModel.getTodoItemsScreenUiState().collectAsState()
     val listState = rememberLazyListState()
-    val scope = rememberCoroutineScope()
 
-    //val isHeaderLarge by remember { derivedStateOf { listState.firstVisibleItemIndex == 0 } }
-    //val completedCount by remember{viewModel.todoItemsScreenUiState.value.numberOfDoneTodoItem}
-    //val errorMessage by viewModel.errorMessage.collectAsState()
-
-    val isCollapsed = remember { derivedStateOf { scrollBehavior.state.collapsedFraction > 0.5 } }
-
-    val textStyle =
-        if (isCollapsed.value)
-            MaterialTheme.typography.titleLarge
-        else
-            MaterialTheme.typography.titleMedium
-
-    val elevation by animateDpAsState(targetValue = if (isCollapsed.value) 4.dp else 0.dp)
     Scaffold(
 
-        //containerColor = colorResource(id = R.color.backPrimaryColor),
+        containerColor = colorResource(id = R.color.backPrimaryColor),
         topBar = {
-            CollapsingToolBar(scrollBehavior = scrollBehavior, viewModel = viewModel)
-
+            TodoListToolBar(scrollBehavior = scrollBehavior, viewModel)
         },
 
         modifier = Modifier
             .fillMaxSize()
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
+            .background(MaterialTheme.colorScheme.background),
         floatingActionButton = {
 
             FloatingActionButton(
@@ -110,43 +93,71 @@ fun TodoListScreen(
             }
         }
     ) { innerPadding ->
-        //todoItemMutableList = todoItems
-        //HeaderWithAnimation() //,todoItemMutableList.size)
-        Card(
-            modifier = Modifier.padding(horizontal = 8.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
-        ) {
-            LazyColumn(
-                //state = listState,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .padding(start = 16.dp, end = 16.dp)
-                //.background(MaterialTheme.colorScheme.surface)
-            ) {
-                Log.d("NewStateListScreen", todoItemScreenUiState.value.currentTodoItemList.toString())
-                itemsIndexed(
-                    todoItemScreenUiState.value.currentTodoItemList
-                ) { _, item ->
-                    TodoItemCard(item, navToAdd)
-                }
-                items(2) {
-                    Spacer(modifier = Modifier.height(25.dp))
-                }
 
+        if (!todoItemScreenUiState.value.loading) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressBar()
             }
-            todoItemScreenUiState.value.errorMessage?.let { message ->
-                Snackbar(
-                    modifier = Modifier.padding(8.dp),
-                    action = {
-                        Button(onClick = { /* Handle Retry */ }) {
-                            Text("Error")
-                        }
+        } else {
+            Column {
+                LazyColumn(
+                    state = listState,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(innerPadding)
+                        .padding(start = 16.dp, end = 16.dp)
+                        .zIndex(1f)
+                    //.background(MaterialTheme.colorScheme.surface)
+                ) {
+
+                    itemsIndexed(
+                        items = todoItemScreenUiState.value.currentTodoItemList,
+
+
+                    ) { _, item ->
+
+                        TodoItemCard(
+                            item,
+                            navToAdd,
+                            { it -> viewModel.editExecutionFlow(it) },
+                            { it -> viewModel.formatDate(it) })
                     }
-                ) { Text(message) }
+
+                    item {
+                        NewTaskItem { viewModel.updateTasks() }
+                    }
+                }
+                if (todoItemScreenUiState.value.errorMessage != null) {
+                    SnackbarForError(viewModel)
+                    viewModel.retryFunction()
+                }
             }
         }
+    }
+}
+
+
+
+@Composable
+fun NewTaskItem(
+    onClick: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.surface)
+            .focusable(true)
+            .clickable { onClick() }
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        horizontalArrangement = Arrangement.Start
+    ) {
+        //Spacer(modifier = Modifier.width(36.dp))
+        Text(
+            modifier = Modifier,
+            text = stringResource(id = R.string.update),
+            color = MaterialTheme.colorScheme.primary,
+            //style = TasksTheme.typography.body,
+        )
     }
 }
 /*

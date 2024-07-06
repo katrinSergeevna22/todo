@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/backPrimaryColor"
     android:orientation="vertical"
-    tools:context=".presentation.ui.AddTodoItemFragment">
+    tools:context=".presentation.ui.view.AddTodoItemFragment">
 
 
     <ImageButton

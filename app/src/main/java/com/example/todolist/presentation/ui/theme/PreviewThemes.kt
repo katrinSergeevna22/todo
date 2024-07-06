@@ -1,17 +1,14 @@
-package com.example.todolist.ui.theme
+package com.example.todolist.presentation.ui.theme
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.todolistcompose.ui.MainScreen
+import com.example.todolist.presentation.ui.compose.navigation.AppNavigation
 
 @Preview(showBackground = true)
 @Composable
 fun LightThemePreview() {
     ToDoListComposeTheme(darkTheme = false) {
-        MainScreen()
+        AppNavigation()
     }
 }
 
@@ -19,7 +16,7 @@ fun LightThemePreview() {
 @Composable
 fun DarkThemePreview() {
     ToDoListComposeTheme(darkTheme = true) {
-        MainScreen()
+        AppNavigation()
     }
 }
 
