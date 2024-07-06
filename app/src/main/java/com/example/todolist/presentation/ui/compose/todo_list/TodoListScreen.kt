@@ -1,18 +1,22 @@
-package com.example.todolistcompose.ui
+package com.example.todolist.presentation.ui.compose
 
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 
@@ -22,46 +26,77 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.todolist.R
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconToggleButton
+import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.navigation.NavHostController
-import com.example.todolist.domain.TodoItem
+import com.example.todolist.presentation.ui.theme.Colors
 import com.example.todolist.presentation.viewModel.ListViewModel
-import com.example.todolist.ui.theme.Colors
 
-lateinit var navigationControler: NavHostController
+@SuppressLint("StaticFieldLeak")
 
 //val todoList by viewModel.newTodoList.collectAsState(coroutineContext)
 @OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+//@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun TodoListScreen(
-    navController: NavHostController) {
-    navigationControler = navController
+    viewModel: ListViewModel,
+    navToAdd: (String?) -> Unit,
+) {
 
+    val scrollBehavior =
+        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    //val todoList by viewModel.todoList.collectAsState()
+    //val isVisibilityOn by viewModel.isVisibilityOnFlow.collectAsState()
+
+    val todoItemScreenUiState = viewModel.todoItemsScreenUiState.collectAsState()
+    //val todoList by todoItemScreenUiState.value.currentTodoItemList
+    val listState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
+
+    //val isHeaderLarge by remember { derivedStateOf { listState.firstVisibleItemIndex == 0 } }
+    //val completedCount by remember{viewModel.todoItemsScreenUiState.value.numberOfDoneTodoItem}
+    //val errorMessage by viewModel.errorMessage.collectAsState()
+
+    val isCollapsed = remember { derivedStateOf { scrollBehavior.state.collapsedFraction > 0.5 } }
+
+    val textStyle =
+        if (isCollapsed.value)
+            MaterialTheme.typography.titleLarge
+        else
+            MaterialTheme.typography.titleMedium
+
+    val elevation by animateDpAsState(targetValue = if (isCollapsed.value) 4.dp else 0.dp)
     Scaffold(
-        containerColor = colorResource(id = R.color.backPrimaryColor),
+
+        //containerColor = colorResource(id = R.color.backPrimaryColor),
+        topBar = {
+            CollapsingToolBar(scrollBehavior = scrollBehavior, viewModel = viewModel)
+
+        },
+
+        modifier = Modifier
+            .fillMaxSize()
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
         floatingActionButton = {
+
             FloatingActionButton(
-                onClick = {navController.navigate("add_todo_item")},
-                //onClick = { navController.navigate("add_todo_item") },
+                onClick = { navToAdd(null) },
                 containerColor = colorResource(id = R.color.blue),
                 contentColor = Color.White,
                 modifier = Modifier.padding(16.dp),
@@ -74,13 +109,47 @@ fun TodoListScreen(
                 )
             }
         }
-    ){
+    ) { innerPadding ->
         //todoItemMutableList = todoItems
-        HeaderWithAnimation() //,todoItemMutableList.size)
+        //HeaderWithAnimation() //,todoItemMutableList.size)
+        Card(
+            modifier = Modifier.padding(horizontal = 8.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+        ) {
+            LazyColumn(
+                //state = listState,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .padding(start = 16.dp, end = 16.dp)
+                //.background(MaterialTheme.colorScheme.surface)
+            ) {
+                Log.d("NewStateListScreen", todoItemScreenUiState.value.currentTodoItemList.toString())
+                itemsIndexed(
+                    todoItemScreenUiState.value.currentTodoItemList
+                ) { _, item ->
+                    TodoItemCard(item, navToAdd)
+                }
+                items(2) {
+                    Spacer(modifier = Modifier.height(25.dp))
+                }
 
-
+            }
+            todoItemScreenUiState.value.errorMessage?.let { message ->
+                Snackbar(
+                    modifier = Modifier.padding(8.dp),
+                    action = {
+                        Button(onClick = { /* Handle Retry */ }) {
+                            Text("Error")
+                        }
+                    }
+                ) { Text(message) }
+            }
+        }
     }
 }
+/*
 @Composable
 fun HeaderWithAnimation() {
 
@@ -104,7 +173,7 @@ fun HeaderWithAnimation() {
             enter = fadeIn(animationSpec = tween(300)),
             exit = fadeOut(animationSpec = tween(300))
         ) {
-            HeaderLarge(completedCount, viewModel::switchVisibility)
+            //HeaderLarge(completedCount, viewModel::switchVisibility)
         }
 
         AnimatedVisibility(
@@ -113,39 +182,31 @@ fun HeaderWithAnimation() {
             exit = fadeOut(animationSpec = tween(300))
         ) {
 
-            HeaderSmall(completedCount, viewModel::switchVisibility)
+            //HeaderSmall(completedCount, viewModel::switchVisibility)
         }
 
         LazyColumn(
-            state =  listState,
+            state = listState,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(start = 16.dp, end = 16.dp)
-                //.background(MaterialTheme.colorScheme.surface)
+            //.background(MaterialTheme.colorScheme.surface)
         ) {
             itemsIndexed(
-                todoList) { _, item ->
-                TodoItemCard(item, navController = navigationControler )
+                todoList
+            ) { _, item ->
+                TodoItemCard(item, navController = navigationControler)
             }
             items(2) {
                 Spacer(modifier = Modifier.height(25.dp))
             }
 
         }
-        errorMessage?.let { message ->
-            Snackbar(
-                modifier = Modifier.padding(8.dp),
-                action = {
-                    Button(onClick = { /* Handle Retry */ }) {
-                        Text("Error")
-                    }
-                }
-            ) { Text(message) }
-        }
 
     }
 }
 
+/*
 @Composable
 fun HeaderLarge(
     size: Int,
@@ -207,6 +268,8 @@ fun HeaderLarge(
     }
 }
 
+ */
+/*
 @Composable
 fun HeaderSmall(
     size: Int,
@@ -217,10 +280,12 @@ fun HeaderSmall(
     var checked by remember { mutableStateOf(isVisibilityOn) }
     Box(
         modifier = Modifier
+            .padding((WindowInsets.systemBars.only(WindowInsetsSides.Top)).asPaddingValues())
+            //modifier = Modifier
             .fillMaxWidth()
             .height(64.dp)
-            .background(MaterialTheme.colorScheme.background)
-            .padding(start = 16.dp, end = 24.dp),
+            .background(MaterialTheme.colorScheme.background),
+           // .padding(start = 16.dp, end = 24.dp),
         contentAlignment = Alignment.CenterStart
     ) {
         Row(
@@ -255,4 +320,6 @@ fun HeaderSmall(
             }
         }
     }
+
 }
+ */

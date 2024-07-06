@@ -1,11 +1,10 @@
-package com.example.todolistcompose.ui
+package com.example.todolist.presentation.ui.compose
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconToggleButton
@@ -32,13 +31,13 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavHostController
 import com.example.todolist.R
 import com.example.todolist.domain.TodoItem
-import com.example.todolist.ui.theme.Colors
+import com.example.todolist.presentation.ui.theme.Colors
 
 
 @Composable
     fun TodoItemCard(
         item : TodoItem,
-        navController: NavHostController) {
+        navToAdd: (String?) -> Unit,) {
 
         var checked by remember { mutableStateOf(item.executionFlag) }
         var selectRelevance by remember { mutableStateOf(item.relevance) }
@@ -140,7 +139,7 @@ import com.example.todolist.ui.theme.Colors
                 }
 
                 IconButton(
-                    onClick = { navController.navigate("add_todo_item/${item.id}") },
+                    onClick = { navToAdd(item.id) },
                     modifier = Modifier
                         .size(24.dp)
                         //.background(Color.Transparent)
