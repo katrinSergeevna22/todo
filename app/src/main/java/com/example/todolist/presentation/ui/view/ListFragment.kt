@@ -1,36 +1,7 @@
-package com.example.todolist.presentation.ui
+package com.example.todolist.presentation.ui.view
 
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.RectF
-import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.ViewTreeObserver
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.toRect
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.todolist.MainActivity
-import com.example.todolist.R
-import com.example.todolist.presentation.adapter_todo_item.TodoAdapter
-import com.example.todolist.data.TodoItemsRepository
-import com.example.todolist.databinding.FragmentListBinding
-import com.example.todolist.domain.TodoItem
 //import com.example.todolist.presentation.ui.theme.MyAppTheme
-import com.example.todolist.presentation.viewModel.ListViewModel
-import com.example.todolist.presentation.viewModel.AddTodoItemViewModel
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import androidx.activity.compose.setContent
-import androidx.core.app.ComponentActivity
 
 class ListFragment : Fragment() {
     /* View

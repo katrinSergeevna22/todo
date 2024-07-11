@@ -1,17 +1,27 @@
-package com.example.todolist.domain
+package com.example.todolist.domain.model
 
-import android.os.Parcel
-import android.os.Parcelable
+import java.util.UUID
 
+/**
+ * Data class representing a todo item.
+ *
+ * @property id unique identifier of the todo item
+ * @property text text description of the todo item
+ * @property relevance relevance level of the todo item
+ * @property deadline deadline for the todo item (nullable)
+ * @property executionFlag flag indicating if the todo item is executed
+ * @property dateOfCreating timestamp of when the todo item was created
+ * @property dateOfEditing timestamp of when the todo item was last edited (nullable)
+ */
 data class TodoItem(
-    val id: String,
+    val id: UUID,
     var text: String,
     var relevance: String,
-    var deadline: String? = null,
+    var deadline: Long? = null,
     var executionFlag: Boolean,
-    val dateOfCreating: String,
-    var dateOfEditing: String? = null,
-) : Parcelable {
+    val dateOfCreating: Long,
+    var dateOfEditing: Long? = null,
+)/* : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
@@ -42,7 +52,8 @@ data class TodoItem(
         override fun newArray(size: Int): Array<TodoItem?> {
             return arrayOfNulls(size)
         }
-    }
-    constructor() : this("", "", "", "", false, "")
+        */
+{
+    constructor() : this(UUID.randomUUID(), "", "", null, false, 0L)
 
 }

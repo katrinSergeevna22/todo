@@ -1,30 +1,9 @@
-package com.example.todolist.presentation.ui
+package com.example.todolist.presentation.ui.view
 
-import android.graphics.PorterDuff
-import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
-import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import com.example.todolist.MainActivity
-import com.example.todolist.R
-import com.example.todolist.data.LocalDataStore
-import com.example.todolist.databinding.FragmentAddTodoItemBinding
-import com.example.todolist.domain.TodoItem
-import com.example.todolist.presentation.viewModel.AddTodoItemViewModel
-import com.example.todolist.presentation.viewModel.ListViewModel
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class AddTodoItemFragment : Fragment() {
-    lateinit var binding: FragmentAddTodoItemBinding
+    /*lateinit var binding: FragmentAddTodoItemBinding
     var selectTodoItem: TodoItem? = null
     private var todoItem: TodoItem? = null
     var selectedDateInFragment: String? = null
@@ -278,6 +257,8 @@ val listViewModel = ListViewModel.newInstance()
         val imm = getSystemService(requireContext(), InputMethodManager::class.java)
         imm?.hideSoftInputFromWindow(view?.windowToken, 0)
     }
+
+     */
 }
 
 

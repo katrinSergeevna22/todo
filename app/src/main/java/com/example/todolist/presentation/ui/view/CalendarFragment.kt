@@ -1,4 +1,4 @@
-package com.example.todolist.presentation.ui
+package com.example.todolist.presentation.ui.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
