@@ -18,7 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.todolist.domain.model.TodoItem
+import com.example.todolist.domain.model.TodoModel
 import com.example.todolist.R
 import com.example.todolist.presentation.ui.compose.add_item.AddTodoItemRelevance
 import com.example.todolist.presentation.ui.compose.add_item.AddTodoScreenDeadline
@@ -31,7 +31,7 @@ import com.example.todolist.presentation.viewModel.AddTodoItemViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTodoItemScreen(
-    item: TodoItem?,
+    item: TodoModel?,
     //size: Int,
     viewModel: AddTodoItemViewModel,
     onBack: () -> Unit,

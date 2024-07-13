@@ -2,7 +2,7 @@ package com.example.todolist.data.repository
 
 import android.util.Log
 import com.example.todolist.data.LocalDataStore
-import com.example.todolist.domain.model.TodoItem
+import com.example.todolist.domain.model.TodoModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +13,7 @@ import kotlinx.coroutines.withContext
  * Local repository
  * */
 class TodoItemsRepository private constructor() {
-    private var _list = MutableStateFlow<List<TodoItem>>(LocalDataStore.list)
+    private var _list = MutableStateFlow<List<TodoModel>>(LocalDataStore.list)
     val list = _list.asStateFlow()
 
     //    suspend fun fetchTodoItemList(){
@@ -21,12 +21,12 @@ class TodoItemsRepository private constructor() {
 //            _list.value = LocalDataStore.list
 //        }
 //    }
-    suspend fun getTodoItemList(): Flow<List<TodoItem>> {
+    suspend fun getTodoItemList(): Flow<List<TodoModel>> {
         Log.d("NewStateRepo", list.value.toString())
         return list
     }
 
-    suspend fun addTodoItem(item: TodoItem) {
+    suspend fun addTodoItem(item: TodoModel) {
         Log.d("AddCor1", Thread.currentThread().name)
         withContext(Dispatchers.IO) {
             //_list.value += item
@@ -36,14 +36,14 @@ class TodoItemsRepository private constructor() {
 
     }
 
-    suspend fun removeTodoItem(item: TodoItem) {
+    suspend fun removeTodoItem(item: TodoModel) {
         withContext(Dispatchers.IO) {
             //_list.value -= item
             LocalDataStore.list -= item
         }
     }
 
-    suspend fun editTodoItem(newItem: TodoItem) {
+    suspend fun editTodoItem(newItem: TodoModel) {
         withContext(Dispatchers.IO) {
             LocalDataStore.list.forEach {
                 if (newItem.id == it.id) {
@@ -58,7 +58,7 @@ class TodoItemsRepository private constructor() {
         }
     }
 
-    suspend fun achieve(item: TodoItem) {
+    suspend fun achieve(item: TodoModel) {
         withContext(Dispatchers.IO) {
             LocalDataStore.list.forEach {
                 if (item.id == it.id) {

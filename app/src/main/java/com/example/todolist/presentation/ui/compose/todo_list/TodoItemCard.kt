@@ -33,144 +33,128 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.example.todolist.R
 import com.example.todolist.domain.Relevance
-import com.example.todolist.domain.model.TodoItem
-import com.example.todolist.domain.textName
-import com.example.todolist.domain.textNameForJson
+import com.example.todolist.domain.model.TodoModel
 import com.example.todolist.presentation.ui.theme.Colors
 import java.util.UUID
 
 
 @Composable
-    fun TodoItemCard(
-    item : TodoItem,
+fun TodoItemCard(
+    item: TodoModel,
     navToAdd: (UUID?) -> Unit,
-    onClickDone: (TodoItem) -> Unit,
-    formatDate: (Long?) -> String) {
+    onClickDone: (TodoModel) -> Unit,
+    formatDate: (Long?) -> String,
+    designOfCheckboxes: (Boolean, Relevance) -> Int,
+) {
 
-        var checked by remember { mutableStateOf(item.executionFlag) }
-        var selectRelevance by remember { mutableStateOf(item.relevance) }
-        val context = LocalContext.current
-        Card(
+    var checked by remember { mutableStateOf(item.executionFlag) }
+    var selectRelevance by remember { mutableStateOf(item.relevance) }
+    val context = LocalContext.current
+    Card(
+        modifier = Modifier
+            .fillMaxWidth(),
+
+        colors = CardDefaults.cardColors(
+            MaterialTheme.colorScheme.surface,
+            colorResource(id = R.color.black),
+            MaterialTheme.colorScheme.surface,
+            colorResource(id = R.color.black),
+        )
+    ) {
+        ConstraintLayout(
             modifier = Modifier
-                .fillMaxWidth(),
-
-            colors = CardDefaults.cardColors(
-                MaterialTheme.colorScheme.surface,
-                colorResource(id = R.color.black),
-                MaterialTheme.colorScheme.surface,
-                colorResource(id = R.color.black),
-            )
+                .fillMaxWidth()
+                .padding(16.dp)
         ) {
-            ConstraintLayout(
+            val (readinessFlag, textOfTodoItem, infoButton, dateTodoItem, iconInText) = createRefs()
+
+            IconToggleButton(
+                checked = checked,
+                onCheckedChange = {
+                    checked = it
+                    item.executionFlag = !item.executionFlag
+                    onClickDone(item)
+                },
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
+                    .size(24.dp)
+                    .constrainAs(readinessFlag) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
+                    }
             ) {
-                val (readinessFlag, textOfTodoItem, infoButton, dateTodoItem, iconInText) = createRefs()
+                Image(
+                    painter =
+                    painterResource(id = designOfCheckboxes(item.executionFlag, item.relevance)),
+                    contentDescription = stringResource(id = R.string.descriptionButtonReady),
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.size(24.dp),
 
-                IconToggleButton(
-                    checked = checked,
-                    onCheckedChange = {
-                        checked = it
-                        item.executionFlag = !item.executionFlag
-                        onClickDone(item) },
+                )
+            }
+            if (item.executionFlag) {
+                Text(
+                    text = item.text,
+                    fontFamily = FontFamily.Default,
+                    color = Colors.GrayColor,
+                    fontSize = 16.sp,
+                    style = TextStyle(textDecoration = TextDecoration.LineThrough),
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis,
                     modifier = Modifier
-                        .size(24.dp)
-                        .constrainAs(readinessFlag) {
+                        .constrainAs(textOfTodoItem) {
                             top.linkTo(parent.top)
-                            start.linkTo(parent.start)
-                        }
-                    ) {
-                    Image(
-                        painter =
-                        if (item.executionFlag){
-                            painterResource(id = R.drawable.ic_readliness_flag_checked)
-                        }
-                        else if (item.relevance == Relevance.URGENT.textNameForJson(context)){
-                            painterResource(id = R.drawable.ic_readliness_flag_unchecked_high)
-                        }
-                        else {
-                            Log.d("CardRel", item.relevance)
-                            painterResource(id = R.drawable.ic_readiness_flag_normal)
-                        },
-                        contentDescription = stringResource(id = R.string.descriptionButtonReady),
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.size(24.dp),
-                        colorFilter =
-                        if (!item.executionFlag && item.relevance != stringResource(R. string.important)) {
-                            ColorFilter.tint(Colors.GrayColor)
-                        } else {
-                            null
-                        }
-                    )
-                }
-
-                if (item.executionFlag){
-                    Text(
-                        text = item.text,
-                        fontFamily = FontFamily.Default,
-                        color = Colors.GrayColor,
-                        fontSize = 16.sp,
-                        style = TextStyle(textDecoration = TextDecoration.LineThrough),
-                        maxLines = 3,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier
-                            .constrainAs(textOfTodoItem) {
-                                top.linkTo(parent.top)
-                                start.linkTo(readinessFlag.end, margin = 12.dp)
-                                end.linkTo(infoButton.start, margin = 12.dp)
-                                width = Dimension.fillToConstraints
-                            }
-                    )
-                }
-                else {
-                    Text(
-                        text = item.text,
-                        color = MaterialTheme.colorScheme.primary,
-                        style = MaterialTheme.typography.bodySmall,
-                        maxLines = 3,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier
-                            .constrainAs(textOfTodoItem) {
-                                top.linkTo(parent.top)
-                                start.linkTo(readinessFlag.end, margin = 12.dp)
-                                end.linkTo(infoButton.start, margin = 12.dp)
-                                width = Dimension.fillToConstraints
-                            }
-
-                    )
-                }
-
-                IconButton(
-                    onClick = { navToAdd(item.id) },
-                    modifier = Modifier
-                        .size(24.dp)
-                        //.background(Color.Transparent)
-                        .constrainAs(infoButton) {
-                            top.linkTo(parent.top)
-                            end.linkTo(parent.end)
-                        }
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_info_outline),
-                        contentDescription = "Кнопка для редактирования",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
-                Log.d("Deadline", item.deadline.toString())
-                if (item.deadline != 0L && item.deadline != null) {
-                    Text(
-                        text =  formatDate(item.deadline),
-                        fontFamily = FontFamily.Default,
-                        color = Colors.GrayColor,
-                        modifier = Modifier.constrainAs(dateTodoItem) {
-                            top.linkTo(textOfTodoItem.bottom, margin = 4.dp)
                             start.linkTo(readinessFlag.end, margin = 12.dp)
+                            end.linkTo(infoButton.start, margin = 12.dp)
+                            width = Dimension.fillToConstraints
+                        }
+                )
+            } else {
+                Text(
+                    text = item.text,
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.bodySmall,
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier
+                        .constrainAs(textOfTodoItem) {
+                            top.linkTo(parent.top)
+                            start.linkTo(readinessFlag.end, margin = 12.dp)
+                            end.linkTo(infoButton.start, margin = 12.dp)
+                            width = Dimension.fillToConstraints
                         }
 
-                    )
-                }
+                )
+            }
+
+            IconButton(
+                onClick = { navToAdd(item.id) },
+                modifier = Modifier
+                    .size(24.dp)
+                    //.background(Color.Transparent)
+                    .constrainAs(infoButton) {
+                        top.linkTo(parent.top)
+                        end.linkTo(parent.end)
+                    }
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_info_outline),
+                    contentDescription = "Кнопка для редактирования",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+            if (item.deadline != 0L && item.deadline != null) {
+                Text(
+                    text = formatDate(item.deadline),
+                    fontFamily = FontFamily.Default,
+                    color = Colors.GrayColor,
+                    modifier = Modifier.constrainAs(dateTodoItem) {
+                        top.linkTo(textOfTodoItem.bottom, margin = 4.dp)
+                        start.linkTo(readinessFlag.end, margin = 12.dp)
+                    }
+
+                )
             }
         }
     }
+}

@@ -1,6 +1,6 @@
 package com.example.todolist.domain
 
-import com.example.todolist.domain.model.TodoItem
+import com.example.todolist.domain.model.TodoModel
 import kotlinx.coroutines.flow.Flow
 import com.example.todolist.data.network.util.NetworkState
 import java.util.UUID
@@ -8,34 +8,34 @@ import java.util.UUID
 interface INetworkDatasource {
     fun getTasks(
         token: String
-    ): Flow<NetworkState<List<TodoItem>>>
+    ): Flow<NetworkState<List<TodoModel>>>
 
     fun updateListOfTodoItem(
-        tasks: List<TodoItem>,
+        tasks: List<TodoModel>,
         revision: Int,
         token: String,
         login: String
-    ): Flow<NetworkState<List<TodoItem>>>
+    ): Flow<NetworkState<List<TodoModel>>>
 
     fun addTask(
-        task: TodoItem,
+        task: TodoModel,
         revision: Int,
         token: String,
         login: String
-    ): Flow<NetworkState<TodoItem>>
+    ): Flow<NetworkState<TodoModel>>
 
     fun updateTask(
-        task: TodoItem,
+        task: TodoModel,
         revision: Int,
         token: String,
         login: String
-    ): Flow<NetworkState<TodoItem>>
+    ): Flow<NetworkState<TodoModel>>
 
     fun deleteTask(
         taskId: UUID,
         revision: Int,
         token: String,
-    ): Flow<NetworkState<TodoItem>>
+    ): Flow<NetworkState<TodoModel>>
 
     companion object {
         fun newInstance() = INetworkDatasource

@@ -1,14 +1,14 @@
 package com.example.todolist.data.network.util
 
 import com.example.todolist.domain.VariantFunction
-import com.example.todolist.domain.model.TodoItem
+import com.example.todolist.domain.model.TodoModel
 
 data class TodoItemScreenUiState(
-    val allTodoItemsList: List<TodoItem> = listOf(),
+    val allTodoItemsList: List<TodoModel> = listOf(),
     val isVisibleDone: Boolean = false,
     val errorMessage: String? = null,
     val lastOperation: VariantFunction? = null,
-    val lastItem: TodoItem? = null,
+    val lastItem: TodoModel? = null,
     val loading : Boolean = true
 
 ) {

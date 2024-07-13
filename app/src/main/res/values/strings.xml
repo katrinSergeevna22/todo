@@ -25,6 +25,14 @@
     <string name="descriptionButtonDelete">Кнопка удалить</string>
     <string name="descriptionExcUpdate">При обновлении: ошибка ввода-вывода:</string>
 
+    <string name="errorSynchronized">Ошибка синхронизации!</string>
+    <string name="errorDataBaseRead">Ошибка чтения из базы данных!</string>
+    <string name="errorGetData">Ошибка получения данных!</string>
+    <string name="errorAddData">Ошибка добавления данных!</string>
+    <string name="errorEditData">Ошибка изменения данных!</string>
+    <string name="errorRemoveData">Ошибка удаления данных!</string>
+    <string name="errorNoInternet">Отсутствует подключение к интернету!</string>
+
     <string-array name="relevanceOfTodo">
         <item>@string/ordinary</item>
         <item>@string/lowRu</item>

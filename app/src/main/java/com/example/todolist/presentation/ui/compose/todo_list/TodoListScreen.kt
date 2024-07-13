@@ -58,7 +58,6 @@ fun TodoListScreen(
     viewModel: ListViewModel,
     navToAdd: (UUID?) -> Unit,
 ) {
-
     val scrollBehavior =
         TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
@@ -93,8 +92,8 @@ fun TodoListScreen(
             }
         }
     ) { innerPadding ->
-
-        if (!todoItemScreenUiState.value.loading) {
+        Log.d("LoadScreen", todoItemScreenUiState.value.loading.toString())
+        if (todoItemScreenUiState.value.loading) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressBar()
             }
@@ -112,20 +111,19 @@ fun TodoListScreen(
 
                     itemsIndexed(
                         items = todoItemScreenUiState.value.currentTodoItemList,
-
-
                     ) { _, item ->
 
                         TodoItemCard(
                             item,
                             navToAdd,
-                            { it -> viewModel.editExecutionFlow(it) },
-                            { it -> viewModel.formatDate(it) })
+                            { viewModel.updateTodoItem(it) },
+                            { viewModel.formatDate(it) },
+                            { flag, relevance -> viewModel.designOfCheckboxes(flag, relevance) })
                     }
-
                     item {
                         NewTaskItem { viewModel.updateTasks() }
                     }
+
                 }
                 if (todoItemScreenUiState.value.errorMessage != null) {
                     SnackbarForError(viewModel)
@@ -135,7 +133,6 @@ fun TodoListScreen(
         }
     }
 }
-
 
 
 @Composable

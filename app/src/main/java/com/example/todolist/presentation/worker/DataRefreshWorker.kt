@@ -8,7 +8,7 @@ import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import com.example.todolist.presentation.viewModel.ListViewModelProvider
+import com.example.todolist.presentation.viewModel.ListViewModel
 import java.util.concurrent.TimeUnit
 
 /**
@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit
 class DataRefreshWorker(appContext: Context, workerParams: WorkerParameters) :
     CoroutineWorker(appContext, workerParams) {
     override suspend fun doWork(): Result {
-        ListViewModelProvider.listViewModel.fetchRepository()
+        //val d: ListViewModel = rememberViewModel().fetchRepository()
         return Result.success()
     }
 }
