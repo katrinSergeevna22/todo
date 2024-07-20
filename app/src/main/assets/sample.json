@@ -1,0 +1,140 @@
+{
+  "templates": {
+    "tutorialCard": {
+      "type": "container",
+      "items": [
+        {
+          "type": "text",
+          "font_size": 21,
+          "text_color": "#8E8E93",
+          "font_weight": "bold",
+          "margins": {
+            "bottom": 16
+          },
+          "$text": "title"
+        },
+        {
+          "type": "text",
+          "font_size": 16,
+          "text_color": "#8E8E93",
+          "margins": {
+            "bottom": 16
+          },
+          "$text": "body"
+        }
+      ],
+      "margins": {
+        "bottom": 6
+      },
+      "orientation": "vertical",
+      "paddings": {
+        "top": 10,
+        "bottom": 0,
+        "left": 30,
+        "right": 30
+      }
+    }
+  },
+  "card": {
+    "log_id": "todo_app_card",
+    "states": [
+      {
+        "state_id": 0,
+        "div": {
+          "type": "container",
+          "background": "white",
+          "items": [
+            {
+              "type": "image",
+              "image_url": "https://brandyellen.com/wp-content/uploads/2021/03/Techniques-to-Improve-Your-Time-Management-Skills-2.png",
+              "margins": {
+                "top": 10,
+                "right": 60,
+                "bottom": 10,
+                "left": 60
+              }
+            },
+            {
+              "type": "tutorialCard",
+              "title": "Todo List App",
+              "body": "Приложение Todo List создано, для того, чтобы помочь пользователю распланировать свою жизнь.\n\nВ приложение можно добавлять свои дела, редактировать их и удалять.\n\nПользователь может проставить важность дела и дедлайн.\n\nВ приложение добавлена новая функция! Теперь можно выбрать тему!"
+            },
+            {
+              "type": "text",
+              "margins": {
+                "top": 10,
+                "right": 30,
+                "bottom": 30,
+                "left": 30
+              },
+              "font_size": 16,
+              "text_color": "#007AFF",
+              "text": "Если прочли описание, нажмите на кнопку ниже ;)"
+            },
+            {
+              "type": "state",
+              "id": "card0.likes",
+              "states": [
+                {
+                  "state_id": "disliked",
+                  "div": {
+                    "type": "image",
+                    "width": {
+                      "type": "fixed",
+                      "value": 150
+                    },
+                    "alignment_horizontal": "center",
+                    "image_url": "https://th.bing.com/th/id/OIP.d38ULdQdEfjou4yINH-LNQHaHa?pid=ImgDet&w=161&h=161&c=7",
+                    "actions": [
+                      {
+                        "log_id": "set_liked",
+                        "url": "div-action://set_state?state_id=0/card0.likes/liked"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "state_id": "liked",
+                  "div": {
+                    "type": "image",
+                    "image_url": "https://th.bing.com/th/id/OIP.mXcvgeiL4ugSqmqwbSZlsgHaHa?pid=ImgDet&w=155&h=155&c=7&dpr=1,5",
+                    "alignment_horizontal": "center",
+                    "width": {
+                      "type": "fixed",
+                      "value": 250
+                    },
+                    "actions": [
+                      {
+                        "log_id": "set_liked",
+                        "url": "div-action://set_state?state_id=0/card0.likes/disliked"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "text": "Нажмите, чтобы вернуться на прошлый экран",
+              "font_size": 16,
+              "margins": {
+                "top": 20,
+                "right": 30,
+                "bottom": 30,
+                "left": 30
+              },
+              "text_alignment_horizontal": "center",
+              "text_color": "#FF0000",
+              "actions": [
+                {
+                  "log_id": "show_toast",
+                  "url": "sample-action://exit?"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

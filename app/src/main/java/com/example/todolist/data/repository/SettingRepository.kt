@@ -5,6 +5,8 @@ import android.content.SharedPreferences
 import androidx.core.content.ContextCompat
 import com.example.todolist.R
 import com.example.todolist.domain.repository.ISettingRepository
+import com.example.todolist.presentation.ui.theme.ThemeOption
+import com.example.todolist.presentation.ui.theme.ThemeOption.System
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,6 +35,8 @@ class SettingRepository @Inject constructor(
         const val NOTIFICATION_ENABLED: String = "NOTIFICATION_ENABLED"
         const val NOTIFICATION_ENABLED_DEFAULT: Boolean = true
 
+        const val SELECT_THEME: String = "SELECT_THEME"
+        const val SELECT_THEME_DEFAULT: Int = 2
     }
 
     private val source: SharedPreferences = context.getSharedPreferences(
@@ -62,4 +66,9 @@ class SettingRepository @Inject constructor(
         source.edit().putBoolean(NOTIFICATION_ENABLED, mode).apply()
     }
 
+    override fun getSelectedTheme(): Int = source.getInt(SELECT_THEME, SELECT_THEME_DEFAULT)
+
+    override fun setSelectedTheme(themeOption: Int) {
+        source.edit().putInt(SELECT_THEME, themeOption).apply()
+    }
 }

@@ -8,7 +8,6 @@ import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import com.example.todolist.presentation.viewModel.ListViewModel
 import java.util.concurrent.TimeUnit
 
 /**

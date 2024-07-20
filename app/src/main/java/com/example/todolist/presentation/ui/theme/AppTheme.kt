@@ -14,8 +14,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.todolist.R
 
 @Composable
 fun ColorPalettePreview() {
@@ -24,7 +26,7 @@ fun ColorPalettePreview() {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text(text = "Светлая тема", modifier = Modifier.padding(16.dp))
+        Text(text = stringResource(id = R.string.lightThemePalitra), modifier = Modifier.padding(16.dp))
 
         Box(
             modifier = Modifier
@@ -122,7 +124,7 @@ fun ColorPalettePreview() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(text = "Темная тема", modifier = Modifier.padding(16.dp))
+        Text(text = stringResource(id = R.string.darkThemePalitra), modifier = Modifier.padding(16.dp))
 
         Box(
             modifier = Modifier

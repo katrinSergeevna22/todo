@@ -1,6 +1,8 @@
 package com.example.todolist.presentation.viewModel
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todolist.R
@@ -17,9 +19,10 @@ import com.example.todolist.domain.Relevance
 import com.example.todolist.domain.VariantFunction
 import com.example.todolist.domain.model.DataState
 import com.example.todolist.domain.repository.ISettingRepository
-import com.example.todolist.errorHandling.ErrorHandlingImpl
-import com.example.todolist.providers.IStringProvider
+import com.example.todolist.domain.errorHandling.ErrorHandlingImpl
+import com.example.todolist.domain.providers.IStringProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -60,6 +63,7 @@ class ListViewModel @Inject constructor(
             VariantFunction.GET -> {
                 fetchState()
             }
+
             VariantFunction.ADD -> addTodoItem(itemOrNull ?: TodoModel())
             VariantFunction.UPDATE -> updateTasks()
             VariantFunction.DELETE -> removeTodoItem(itemOrNull ?: TodoModel())
@@ -124,19 +128,18 @@ class ListViewModel @Inject constructor(
             viewModelScope.launch(Dispatchers.IO) {
                 repository.synchronization()
             }
-        }
-        else {
+        } else {
             errorHandlingImpl.showException(stringRecurse.getString(R.string.errorNoInternet))
         }
     }
 
     fun designOfCheckboxes(executionFlag: Boolean, relevance: Relevance): Int {
-        if (executionFlag) {
-            return (R.drawable.ic_readliness_flag_checked)
+        return if (executionFlag) {
+            (R.drawable.ic_readliness_flag_checked)
         } else if (relevance == Relevance.URGENT) {
-            return (R.drawable.ic_readliness_flag_unchecked_high)
+            (R.drawable.ic_readliness_flag_unchecked_high)
         } else {
-            return (R.drawable.ic_readiness_flag_normal)
+            (R.drawable.ic_readiness_flag_normal)
         }
     }
 

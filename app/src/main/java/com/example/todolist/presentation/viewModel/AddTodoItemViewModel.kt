@@ -18,7 +18,7 @@ import com.example.todolist.domain.VariantFunction
 import com.example.todolist.domain.model.DataState
 import com.example.todolist.domain.numberToRelevance
 import com.example.todolist.domain.repository.ISettingRepository
-import com.example.todolist.providers.IStringProvider
+import com.example.todolist.domain.providers.IStringProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
 import retrofit2.HttpException

@@ -17,10 +17,13 @@ private val DarkColorScheme = darkColorScheme(
     tertiary = Colors.DarkThemeTertiaryColor,
     background = Colors.DarkThemeBackPrimaryColor,
     surface = Colors.DarkThemeBackSecondaryColor,
+    error = Colors.Red,
     onPrimary = Colors.White,
     onSecondary = Colors.White,
     onBackground = Colors.DarkThemeBackElevatedColor,
     onSurface = Colors.DarkThemeSeparatorColor,
+    onTertiary = Colors.DarkThemeGrayColor,
+    surfaceTint = Colors.Blue
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -29,18 +32,19 @@ private val LightColorScheme = lightColorScheme(
     tertiary = Colors.LightThemeTertiaryColor,
     background = Colors.LightThemeBackPrimaryColor,
     surface = Colors.LightThemeBackSecondaryColor,
+    error = Colors.Red,
     onPrimary = Colors.Black,
     onSecondary = Colors.LightThemeOverlayColor,
     onBackground = Colors.LightThemeBackElevatedColor,
     onSurface = Colors.LightThemeSeparatorColor,
-
+    onTertiary = Colors.LightThemeGrayColor,
+    surfaceTint = Colors.Blue
 )
 
 
 @Composable
 fun ToDoListComposeTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {

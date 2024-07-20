@@ -1,4 +1,4 @@
-package com.example.todolist.providers
+package com.example.todolist.domain.providers
 
 import android.content.Context
 import androidx.core.content.ContextCompat
@@ -9,6 +9,6 @@ import javax.inject.Inject
 class StringProviderImpl @Inject constructor(@ApplicationContext private val context: Context) :
     IStringProvider {
     override fun getString(stringId: Int): String {
-        return context.getString(R.string.low)
+        return context.getString(stringId)
     }
 }

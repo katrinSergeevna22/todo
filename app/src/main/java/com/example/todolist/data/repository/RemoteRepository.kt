@@ -2,6 +2,7 @@ package com.example.todolist.data.repository
 
 import com.example.todolist.R
 import com.example.todolist.data.database.DatabaseState
+import com.example.todolist.data.network.util.NetworkException
 import com.example.todolist.data.network.util.TodoItemScreenUiState
 import com.example.todolist.domain.IDatabaseSource
 import com.example.todolist.domain.Relevance
@@ -10,7 +11,7 @@ import com.example.todolist.domain.model.DataState
 import com.example.todolist.domain.model.TodoModel
 import com.example.todolist.domain.repository.ITaskLocalRepository
 import com.example.todolist.domain.repository.ITaskRepository
-import com.example.todolist.providers.IStringProvider
+import com.example.todolist.domain.providers.IStringProvider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -74,7 +75,7 @@ class RemoteRepository @Inject constructor(
                     loading = false
                 )
             }
-        } catch (e: IOException) {
+        } catch (e: NetworkException) {
             _remoteDataFlow.update {
                 it.copy(
                     loading = false,

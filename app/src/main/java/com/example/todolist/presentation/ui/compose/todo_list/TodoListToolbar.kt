@@ -10,8 +10,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
@@ -45,6 +47,8 @@ import com.example.todolist.presentation.viewModel.ListViewModel
 @Composable
 fun TodoListToolBar(
     scrollBehavior: TopAppBarScrollBehavior,
+    navToSetting: () -> Unit,
+    navToDivKit: () -> Unit,
     viewModel: ListViewModel,
 ) {
     val isCollapsed = scrollBehavior.state.collapsedFraction > 0.5
@@ -77,7 +81,7 @@ fun TodoListToolBar(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
-                        //.verticalScroll(rememberScrollState()),
+                    //.verticalScroll(rememberScrollState()),
 
                 ) {
                     Text(
@@ -98,19 +102,33 @@ fun TodoListToolBar(
                     }
                      */
                 }
-                Icon(
-                    tint = Colors.Blue,
-                    painter = painterResource(
-                        id = if (state.value.isVisibleDone) R.drawable.ic_visibility
-                        else
-                            R.drawable.ic_visibility_off
-                    ),
-                    contentDescription = null,
 
-                    modifier = Modifier.clickable {
-                        viewModel.switchVisibility()
-                    }
-                )
+                IconButton(onClick = navToSetting, content = {
+                    Icon(
+                        tint = Colors.Blue,
+                        painter = painterResource(R.drawable.ic_setting),
+                        contentDescription = null,
+                    )
+                })
+                IconButton(onClick = navToDivKit, content = {
+                    Icon(
+                        tint = Colors.Blue,
+                        painter = painterResource(R.drawable.ic_app_info),
+                        contentDescription = null,
+                    )
+                })
+                IconButton(onClick = { viewModel.switchVisibility() },
+                    content = {
+                        Icon(
+                            tint = Colors.Blue,
+                            painter = painterResource(
+                                id = if (state.value.isVisibleDone) R.drawable.ic_visibility
+                                else
+                                    R.drawable.ic_visibility_off
+                            ),
+                            contentDescription = null,
+                        )
+                    })
             }
 
         },

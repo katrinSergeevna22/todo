@@ -2,9 +2,12 @@ package com.example.todolist.presentation.ui.compose.add_item
 
 import android.widget.Toast
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -15,6 +18,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
@@ -36,6 +42,7 @@ fun AddScreenToolbar(
     onBack: () -> Unit,
     viewModel: AddTodoItemViewModel,
 ) {
+    var isPressed by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val scrollState = rememberScrollState()
     val toolbarElevation by animateDpAsState(if (scrollState.value > 0) 4.dp else 0.dp)
@@ -53,7 +60,7 @@ fun AddScreenToolbar(
             }
         },
         actions = {
-            TextButton(
+            Button(
                 onClick = {
                     if (viewModel.textIsNotEmpty()) {
                         viewModel.saveItemByButton(
@@ -69,63 +76,36 @@ fun AddScreenToolbar(
                         )
                             .show()
                     }
-                    /*
-                    if (text.isNotEmpty()) {
-                        if (item == TodoItem() || item == null) {
-                            val newItem = TodoItem(
-                                (size).toString(),
-                                text,
-                                "Нет",
-                                //if (selectedImportance == -1 || selectedImportance == 0)
-                                //    Relevance.ORDINARY.textName
-                                //else if (selectedImportance == 1) Relevance.LOW.getRelevance()
-                                //else Relevance.URGENT.getRelevance(),
-                                deadline = if (selectedDate != "") selectedDate else null,
-                                executionFlag = false,
-                                dateFormat.toString(),
-                                null,
-                            )
 
-                            viewModel.addItem(newItem)
-                            Toast.makeText(context, "Todo Item Added", Toast.LENGTH_SHORT)
-                                .show()
-                        } else {
-                            val newItem = TodoItem(
-                                item.id,
-                                text,
-                                "Нет",
-                                //if (selectedImportance == -1 || selectedImportance == 0)
-                                //    Relevance.ORDINARY.textName
-                                //else if (selectedImportance == 1) Relevance.LOW.getRelevance()
-                                //else Relevance.URGENT.getRelevance(),
-                                deadline = if (selectedDate != "") selectedDate else null,
-                                executionFlag = item.executionFlag,
-                                item.dateOfCreating,
-                                dateFormat.toString(),
-                            )
-                            viewModel.editItem(newItem)
-                            Toast.makeText(context, "Todo Item Updated", Toast.LENGTH_SHORT)
-                                .show()
-                        }
-                        navController.popBackStack()
-                    } else {
-                        Toast.makeText(
-                            context,
-                            "Please fill all fields",
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
-                    }
-
-                     */
                 },
+                modifier = Modifier.clickable {
+                    isPressed = !isPressed
+                },
+                elevation = ButtonDefaults.elevatedButtonElevation(
+                    defaultElevation = 8.dp,
+                    pressedElevation = 32.dp
+                ),
+                colors =
+                if (!isPressed) {
+                    ButtonDefaults.buttonColors(MaterialTheme.colorScheme.background)
+                }
+                else {
+                    ButtonDefaults.buttonColors(MaterialTheme.colorScheme.surfaceTint)
+                }
+
             ) {
                 Text(
                     text = stringResource(id = R.string.save),
                     fontFamily = FontFamily.Default,
                     fontWeight = FontWeight.Black,
                     fontSize = 14.sp,
-                    color = Colors.Blue,
+                    color =
+                    if (!isPressed) {
+                        Colors.Blue
+                    }
+                    else {
+                        Colors.White
+                    },
                     modifier = Modifier.padding(end = 16.dp)
                 )
             }
@@ -135,6 +115,5 @@ fun AddScreenToolbar(
         modifier = Modifier
             .shadow(elevation = toolbarElevation)
     )
-//elevation = toolbarElevation
 
 }

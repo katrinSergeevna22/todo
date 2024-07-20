@@ -11,5 +11,4 @@ sealed class NetworkState <out T> {
     data class Success<T>(val data: T, val revision: Int) : NetworkState<T>()
     data class Failure(val cause: Throwable): NetworkState<Nothing>()
 
-    //val getTask: (String) -> Flow<NetworkState<List<TodoItem>>> = {}
 }

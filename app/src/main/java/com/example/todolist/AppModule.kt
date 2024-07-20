@@ -13,10 +13,10 @@ import com.example.todolist.domain.INetworkDatasource
 import com.example.todolist.domain.repository.ISettingRepository
 import com.example.todolist.domain.repository.ITaskLocalRepository
 import com.example.todolist.domain.repository.ITaskRepository
-import com.example.todolist.errorHandling.ErrorHandlingImpl
-import com.example.todolist.errorHandling.IErrorHandling
-import com.example.todolist.providers.IStringProvider
-import com.example.todolist.providers.StringProviderImpl
+import com.example.todolist.domain.errorHandling.ErrorHandlingImpl
+import com.example.todolist.domain.errorHandling.IErrorHandling
+import com.example.todolist.domain.providers.IStringProvider
+import com.example.todolist.domain.providers.StringProviderImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
