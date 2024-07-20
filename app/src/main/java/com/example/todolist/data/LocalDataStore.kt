@@ -1,14 +1,12 @@
 package com.example.todolist.data
 
-import com.example.todolist.domain.Relevance
-import com.example.todolist.domain.model.TodoItem
+import com.example.todolist.domain.model.TodoModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import java.util.Calendar
-import java.util.UUID
 
 object LocalDataStore {
-    val list = mutableListOf<TodoItem>()
-    val stateFlow = MutableStateFlow<List<TodoItem>>(list)
+    val list = mutableListOf<TodoModel>()
+    val stateFlow = MutableStateFlow<List<TodoModel>>(list)
 
     init {
         //val date = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
@@ -32,13 +30,13 @@ object LocalDataStore {
          */
 
     }
-    fun addTodoItem(item: TodoItem){
+    fun addTodoItem(item: TodoModel){
         list += item
     }
-    fun removeTodoItem(item: TodoItem){
+    fun removeTodoItem(item: TodoModel){
         list -= item
     }
-    fun editTodoItem(newItem: TodoItem){
+    fun editTodoItem(newItem: TodoModel){
         list.forEach {
             if (newItem.id == it.id) {
                 it.text = newItem.text

@@ -25,14 +25,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.todolist.R
-import com.example.todolist.domain.model.TodoItem
+import com.example.todolist.domain.model.TodoModel
 import com.example.todolist.presentation.ui.theme.Colors
 import com.example.todolist.presentation.viewModel.AddTodoItemViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddScreenToolbar(
-    item: TodoItem?,
+    item: TodoModel?,
     onBack: () -> Unit,
     viewModel: AddTodoItemViewModel,
 ) {

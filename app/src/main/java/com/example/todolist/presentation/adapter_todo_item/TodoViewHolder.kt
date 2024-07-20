@@ -1,13 +1,5 @@
 package com.example.todolist.presentation.adapter_todo_item
 
-import android.view.View
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.RecyclerView
-import com.example.todolist.domain.Relevance
-import com.example.todolist.domain.model.TodoItem
-import com.example.todolist.R
-import com.example.todolist.databinding.TodoItemBinding
-import com.example.todolist.domain.textName
 /* Осталось с реализации на View
 class TodoViewHolder(
     private val binding: TodoItemBinding,

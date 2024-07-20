@@ -16,13 +16,13 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.todolist.R
-import com.example.todolist.domain.model.TodoItem
+import com.example.todolist.domain.model.TodoModel
 import com.example.todolist.presentation.ui.theme.Colors
 import com.example.todolist.presentation.viewModel.AddTodoItemViewModel
 
 @Composable
 fun AddScreenTextField(
-    item: TodoItem?,
+    item: TodoModel?,
     setTextToState: (String) -> Unit,
     viewModel: AddTodoItemViewModel,
 ) {

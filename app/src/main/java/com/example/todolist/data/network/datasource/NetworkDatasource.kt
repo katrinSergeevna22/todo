@@ -5,42 +5,35 @@ import com.example.todolist.domain.INetworkDatasource
 import com.example.todolist.data.network.util.forJson
 import com.example.todolist.data.network.util.toModel
 import com.example.todolist.data.network.util.toToken
-import com.example.todolist.domain.model.TodoItem
+import com.example.todolist.domain.model.TodoModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import com.example.todolist.data.network.api.ToDoApi
 import com.example.todolist.data.network.dto.request.TodoItemListRequestForJson
 import com.example.todolist.data.network.dto.request.TodoItemRequestForJson
 import com.example.todolist.data.network.dto.response.TodoItemForJson
 import com.example.todolist.data.network.util.NetworkState
-import retrofit2.Retrofit
 import java.util.UUID
-import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Retrofit data source
  * */
-class NetworkDatasource : INetworkDatasource {
-    private val api: ToDoApi = Retrofit.Builder()
-        .baseUrl("https://hive.mrdekk.ru/todo/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .client(
-            OkHttpClient.Builder().addInterceptor(HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
-            }).build()
-        )
-        .build()
-        .create(ToDoApi::class.java)
+@Singleton
+class NetworkDatasource @Inject constructor(
+    private val api: ToDoApi
+) : INetworkDatasource {
 
-    override fun getTasks(token: String): Flow<NetworkState<List<TodoItem>>> = flow {
+    override fun getTasks(token: String): Flow<NetworkState<List<TodoModel>>> = flow {
         Log.d("Shared", token)
         emit(NetworkState.Loading)
         try {
+            Log.d("responseApi", api.toString())
             val response = api.getTasks(token.toToken())
+            Log.d("response", response.list.toString())
             emit(
                 NetworkState.Success(
                     response.list.map(TodoItemForJson::toModel),
@@ -53,8 +46,8 @@ class NetworkDatasource : INetworkDatasource {
     }.flowOn(Dispatchers.IO)
 
     override fun updateListOfTodoItem(
-        tasks: List<TodoItem>, revision: Int, token: String, login: String
-    ): Flow<NetworkState<List<TodoItem>>> = flow {
+        tasks: List<TodoModel>, revision: Int, token: String, login: String
+    ): Flow<NetworkState<List<TodoModel>>> = flow {
         emit(NetworkState.Loading)
         try {
             val response = api.patchTasks(
@@ -74,11 +67,11 @@ class NetworkDatasource : INetworkDatasource {
     }.flowOn(Dispatchers.IO)
 
     override fun addTask(
-        task: TodoItem,
+        task: TodoModel,
         revision: Int,
         token: String,
         login: String
-    ): Flow<NetworkState<TodoItem>> = flow {
+    ): Flow<NetworkState<TodoModel>> = flow {
         emit(NetworkState.Loading)
         try {
             val response = api.postTask(
@@ -93,11 +86,11 @@ class NetworkDatasource : INetworkDatasource {
     }.flowOn(Dispatchers.IO)
 
     override fun updateTask(
-        task: TodoItem,
+        task: TodoModel,
         revision: Int,
         token: String,
         login: String
-    ): Flow<NetworkState<TodoItem>> = flow {
+    ): Flow<NetworkState<TodoModel>> = flow {
         emit(NetworkState.Loading)
         try {
             val response = api.putTask(
@@ -116,7 +109,7 @@ class NetworkDatasource : INetworkDatasource {
         taskId: UUID,
         revision: Int,
         token: String
-    ): Flow<NetworkState<TodoItem>> = flow {
+    ): Flow<NetworkState<TodoModel>> = flow {
         emit(NetworkState.Loading)
         try {
             Log.d("Net_Source_delete", revision.toString())
@@ -129,3 +122,4 @@ class NetworkDatasource : INetworkDatasource {
     }.flowOn(Dispatchers.IO)
 
 }
+

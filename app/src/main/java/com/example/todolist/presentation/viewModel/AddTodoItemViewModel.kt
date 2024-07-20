@@ -1,15 +1,11 @@
 package com.example.todolist.presentation.viewModel
 
 import android.content.Context
-import android.os.Message
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todolist.data.repository.SettingsParameters
-import com.example.todolist.data.repository.TaskRepository
 import com.example.todolist.domain.Relevance
-import com.example.todolist.domain.model.TodoItem
-import com.example.todolist.domain.textName
+import com.example.todolist.domain.model.TodoModel
 import com.example.todolist.domain.textNameForJson
 import com.example.todolist.data.network.util.AddItemScreenUIState
 import com.example.todolist.data.network.util.TodoItemScreenUiState
@@ -17,27 +13,34 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import com.example.todolist.data.network.util.NetworkState
-import com.example.todolist.data.repository.SharedPreferencesProvider.context
+import com.example.todolist.data.repository.RemoteRepository
 import com.example.todolist.domain.VariantFunction
+import com.example.todolist.domain.model.DataState
+import com.example.todolist.domain.numberToRelevance
+import com.example.todolist.domain.repository.ISettingRepository
+import com.example.todolist.providers.IStringProvider
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
 import retrofit2.HttpException
 import java.io.IOException
-import java.lang.Error
 import java.net.UnknownHostException
 
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-import java.util.UUID
+import javax.inject.Inject
 
 /**
  * AddTodoItemViewModel is the business logic of adding or editing elements
  * @param repositoru Managing the data received from the server
  * */
-class AddTodoItemViewModel(
-    val repository: TaskRepository
+@HiltViewModel
+class AddTodoItemViewModel @Inject constructor(
+    //val repository: TaskRepository,
+    val repository: RemoteRepository,
+    private val settingParameters: ISettingRepository,
+    private val stringRecurse: IStringProvider,
 ) : ViewModel() {
 
     private val _addTodoUiState = MutableStateFlow(AddItemScreenUIState())
@@ -45,13 +48,13 @@ class AddTodoItemViewModel(
     fun getAddTodoUiState(): StateFlow<AddItemScreenUIState>{
         return addTodoUiState
     }
-    fun loadInState(item: TodoItem?) {
+    fun loadInState(item: TodoModel?) {
         try {
             if (item != null) {
                 _addTodoUiState.value = addTodoUiState.value.copy(
                     id = item.id,
                     description = item.text,
-                    relevance = getNumberImportance(item.relevance, context),
+                    relevance = getNumberImportance(stringRecurse.getString(item.relevance.textNameForJson())),
                     deadline = item.deadline,
                     executionFlag = item.executionFlag,
                     dateOfCreating = item.dateOfCreating,
@@ -61,17 +64,17 @@ class AddTodoItemViewModel(
             }
         } catch (e: IOException) {
             _todoItemsScreenUiState.value =
-                todoItemsScreenUiState.value.copy(lastOperation = VariantFunction.FETCH)
+                todoItemsScreenUiState.value.copy(lastOperation = VariantFunction.GET)
             _todoItemsScreenUiState.value =
                 todoItemsScreenUiState.value.copy(errorMessage = "Ошибка ввода-вывода: ${e.message}")
         } catch (e: HttpException) {
             _todoItemsScreenUiState.value =
-                todoItemsScreenUiState.value.copy(lastOperation = VariantFunction.FETCH)
+                todoItemsScreenUiState.value.copy(lastOperation = VariantFunction.GET)
             _todoItemsScreenUiState.value =
                 todoItemsScreenUiState.value.copy(errorMessage = "Ошибка HTTP: ${e.message}")
         } catch (e: UnknownHostException) {
             _todoItemsScreenUiState.value =
-                todoItemsScreenUiState.value.copy(lastOperation = VariantFunction.FETCH)
+                todoItemsScreenUiState.value.copy(lastOperation = VariantFunction.GET)
             _todoItemsScreenUiState.value =
                 todoItemsScreenUiState.value.copy(errorMessage = "Неизвестный хост: ${e.message}")
         }
@@ -89,11 +92,24 @@ class AddTodoItemViewModel(
 
     private fun fetchFlow() {
         viewModelScope.launch {
-            repository.getTasksFlow().collect {
-                _todoItemsScreenUiState.value = it
+            repository.getTasks().collect { state ->
+                when (state) {
+                    is DataState.Result -> {
+                        _todoItemsScreenUiState.emit(
+                            repository.remoteDataFlow.value
+                        )
+                        //_undoneTasks.emit(UiState.Success(state.data.filter { !it.isDone }))
+                    }
+                    else -> {}
+                }
             }
+
+                    //repository.getTasksFlow().collect {
+//            repository.getTasks().collect{
+//                _todoItemsScreenUiState.value = it
+//            }
         }
-        updateTasks()
+        //updateTasks()
     }
 
     fun getCurrentDate(): SimpleDateFormat {
@@ -108,24 +124,24 @@ class AddTodoItemViewModel(
         )
     }
 
-    fun getNumberImportance(title: String, context: Context): Int {
+    private fun getNumberImportance(title: String): Int {
         val number =
             when (title) {
-                Relevance.ORDINARY.textNameForJson(context) -> 0
-                Relevance.LOW.textNameForJson(context) -> 1
-                Relevance.URGENT.textNameForJson(context) -> 2
+                stringRecurse.getString(Relevance.ORDINARY.textNameForJson()) -> 0
+                stringRecurse.getString(Relevance.LOW.textNameForJson()) -> 1
+                stringRecurse.getString(Relevance.URGENT.textNameForJson()) -> 2
 
                 else -> -1
             }
         return number
     }
 
-    fun getTitleImportance(selectedImportance: Int, context: Context): String {
+    private fun getTitleImportance(selectedImportance: Int): String {
         val titleImportance =
             when (selectedImportance) {
-                -1, 0 -> Relevance.ORDINARY.textName(context)
-                1 -> Relevance.LOW.textName(context)
-                else -> Relevance.URGENT.textName(context)
+                -1, 0 -> stringRecurse.getString(Relevance.ORDINARY.textNameForJson())
+                1 -> stringRecurse.getString(Relevance.LOW.textNameForJson())
+                else -> stringRecurse.getString(Relevance.URGENT.textNameForJson())
             }
         return titleImportance
     }
@@ -147,17 +163,15 @@ class AddTodoItemViewModel(
     }
 
     fun saveItemByButton(
-        item: TodoItem?,
+        item: TodoModel?,
         context: Context
     ) {
         Log.d("SelectItem", item.toString())
         val dataOfNewItem = addTodoUiState.value
-        val newItem = TodoItem(
+        val newItem = TodoModel(
             dataOfNewItem.id,
             dataOfNewItem.description,
-            if (dataOfNewItem.relevance == 0) Relevance.ORDINARY.textNameForJson(context)
-            else if (dataOfNewItem.relevance == 1) Relevance.LOW.textNameForJson(context)
-            else Relevance.URGENT.textNameForJson(context),
+            dataOfNewItem.relevance.toString().numberToRelevance(),
             deadline = dataOfNewItem.deadline ?: 0L,
             executionFlag = dataOfNewItem.executionFlag,
             dateOfCreating = if (dataOfNewItem.dateOfCreating == 0L) Calendar.getInstance().timeInMillis
@@ -165,7 +179,7 @@ class AddTodoItemViewModel(
                 dataOfNewItem.dateOfCreating,
             dateOfEditing = dataOfNewItem.dateOfEditing ?: Calendar.getInstance().timeInMillis,
         )
-        if (item == TodoItem() || item == null) {
+        if (item == TodoModel() || item == null) {
             addFlow(newItem)
         } else {
             updateFlow(newItem)
@@ -177,36 +191,7 @@ class AddTodoItemViewModel(
         return dateFormat.format(Date(date ?: 0L))
     }
 
-    private fun updateTasks() {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val settingsSource = SettingsParameters()
-                repository.updateTasks( todoItemsScreenUiState.value.allTodoItemsList,
-                    settingsSource.getRevision(), settingsSource.getToken(), settingsSource.getUsername()
-                ).collect { state ->
-                    when (state) {
-                        is NetworkState.Failure ->
-                            provideFailure(state.cause.message, VariantFunction.UPDATE)
-                        is NetworkState.Success -> {
-                            settingsSource.setRevision(state.revision)
-                            provideSuccess(state.data, true)
-                        }
-                        is NetworkState.Loading ->
-                            _todoItemsScreenUiState.value =
-                                todoItemsScreenUiState.value.copy(loading = false)
-                        else -> {}
-                    }
-                }
-            } catch (e: IOException) {
-                provideError(VariantFunction.UPDATE, e)
-            } catch (e: HttpException) {
-                provideError(VariantFunction.UPDATE, e)
-            } catch (e: UnknownHostException) {
-                provideError(VariantFunction.UPDATE, e)
-            }
-        }
-    }
-    private fun provideSuccess(list: List<TodoItem>, flag: Boolean){
+    private fun provideSuccess(list: List<TodoModel>, flag: Boolean){
         _todoItemsScreenUiState.value =
             todoItemsScreenUiState.value.copy(allTodoItemsList = list)
         _todoItemsScreenUiState.value =
@@ -231,24 +216,21 @@ class AddTodoItemViewModel(
                 todoItemsScreenUiState.value.copy(errorMessage = "Неизвестный хост: ${e.message}")
         }
     }
-    private fun addFlow(item: TodoItem) {
+    private fun addFlow(item: TodoModel) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.addTaskFlow(item)
+            repository.addTask(item.text, item.relevance, item.deadline)
         }
-        updateTasks()
     }
 
-    fun removeFlow(item: TodoItem) {
+    fun removeFlow(item: TodoModel) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.removeTaskFlow(item)
+            repository.deleteTask(item)
         }
-        updateTasks()
     }
 
-    private fun updateFlow(item: TodoItem) {
+    private fun updateFlow(item: TodoModel) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.editTaskFlow(item)
+            repository.updateTask(item)
         }
-        updateTasks()
     }
 }

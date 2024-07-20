@@ -1,10 +1,5 @@
 package com.example.todolist.presentation.adapter_todo_item
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.recyclerview.widget.ListAdapter
-import com.example.todolist.domain.model.TodoItem
-import com.example.todolist.databinding.TodoItemBinding
 /* Осталось с реализации на View
 class TodoAdapter(
     private val onInfoClicked: (TodoItem) -> Unit,

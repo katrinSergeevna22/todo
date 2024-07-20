@@ -4,9 +4,9 @@ import com.example.todolist.data.network.dto.request.TodoItemListRequestForJson
 import com.example.todolist.data.network.dto.request.TodoItemRequestForJson
 import com.example.todolist.data.network.dto.response.TodoItemListResponseForJson
 import com.example.todolist.data.network.dto.response.TodoItemResponseForJson
+import dagger.Binds
 import retrofit2.http.*
 import java.util.*
-
 
 interface ToDoApi {
     @GET("list")

@@ -11,6 +11,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
@@ -52,9 +53,11 @@ fun SnackbarForError(viewModel: ListViewModel) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(message)
                 Spacer(Modifier.weight(1f))
-                IconButton(onClick = {
-                    viewModel.clearErrorInDataFlow()
-                }) {
+                IconButton(
+                    onClick = {
+                        viewModel.clearErrorInDataFlow()
+                    }, colors = IconButtonDefaults.iconButtonColors(Colors.Red)
+                ) {
                     Icon(
                         Icons.Default.Close,
                         contentDescription = "Close",

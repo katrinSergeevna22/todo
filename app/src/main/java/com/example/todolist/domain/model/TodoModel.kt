@@ -1,5 +1,6 @@
 package com.example.todolist.domain.model
 
+import com.example.todolist.domain.Relevance
 import java.util.UUID
 
 /**
@@ -13,10 +14,10 @@ import java.util.UUID
  * @property dateOfCreating timestamp of when the todo item was created
  * @property dateOfEditing timestamp of when the todo item was last edited (nullable)
  */
-data class TodoItem(
+data class TodoModel(
     val id: UUID,
     var text: String,
-    var relevance: String,
+    var relevance: Relevance,
     var deadline: Long? = null,
     var executionFlag: Boolean,
     val dateOfCreating: Long,
@@ -54,6 +55,6 @@ data class TodoItem(
         }
         */
 {
-    constructor() : this(UUID.randomUUID(), "", "", null, false, 0L)
+    constructor() : this(UUID.randomUUID(), "", Relevance.ORDINARY, null, false, 0L)
 
 }

@@ -3,9 +3,8 @@ package com.example.todolist.presentation.viewModel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todolist.data.repository.SettingsParameters
-import com.example.todolist.data.repository.TaskRepository
-import com.example.todolist.domain.model.TodoItem
+import com.example.todolist.R
+import com.example.todolist.domain.model.TodoModel
 import com.example.todolist.data.network.util.TodoItemScreenUiState
 
 import kotlinx.coroutines.Dispatchers
@@ -13,62 +12,75 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import com.example.todolist.data.network.util.NetworkState
+import com.example.todolist.data.repository.RemoteRepository
+import com.example.todolist.domain.Relevance
 import com.example.todolist.domain.VariantFunction
+import com.example.todolist.domain.model.DataState
+import com.example.todolist.domain.repository.ISettingRepository
+import com.example.todolist.errorHandling.ErrorHandlingImpl
+import com.example.todolist.providers.IStringProvider
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
-import retrofit2.HttpException
-import java.io.IOException
-import java.net.UnknownHostException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.UUID
+import javax.inject.Inject
 
 /**
- * ListTodoItemViewModel is the main ViewModel in the application, which contains all the basic business logic
+ * ListViewModel is the main ViewModel in the application, which contains all the basic business logic
  * @param repositoru Managing the data received from the server
  * */
-class ListViewModel(private val repository: TaskRepository) : ViewModel() {
+@HiltViewModel
+class ListViewModel @Inject constructor(
+    private val repository: RemoteRepository,
+    private val settingParameters: ISettingRepository,
+    private val errorHandlingImpl: ErrorHandlingImpl,
+    private val stringRecurse: IStringProvider,
+) : ViewModel() {
 
     private val _todoItemsScreenUiState = MutableStateFlow(TodoItemScreenUiState())
     private val todoItemsScreenUiState = _todoItemsScreenUiState.asStateFlow()
     fun getTodoItemsScreenUiState(): StateFlow<TodoItemScreenUiState> {
         return todoItemsScreenUiState
     }
+
     private var countOfRetry = 0
 
     init {
-        fetchRepository()
+        fetchState()
     }
 
     fun onClickRetry() {
+        Log.d("clickRetryVM", todoItemsScreenUiState.value.toString())
         val itemOrNull = todoItemsScreenUiState.value.lastItem
         val lastFunction = todoItemsScreenUiState.value.lastOperation
         clearErrorInDataFlow()
         when (lastFunction) {
-            VariantFunction.FETCH -> {
-                fetchRepository()
+            VariantFunction.GET -> {
+                fetchState()
             }
-            VariantFunction.ADD -> addTodoItem(itemOrNull ?: TodoItem())
+            VariantFunction.ADD -> addTodoItem(itemOrNull ?: TodoModel())
             VariantFunction.UPDATE -> updateTasks()
-            VariantFunction.DELETE -> removeTodoItem(itemOrNull ?: TodoItem())
-            VariantFunction.EDIT -> updateTodoItem(itemOrNull ?: TodoItem())
-            null -> Log.d("Error", "Unknown")
+            VariantFunction.DELETE -> removeTodoItem(itemOrNull ?: TodoModel())
+            VariantFunction.EDIT -> updateTodoItem(itemOrNull ?: TodoModel())
+            else -> Log.d("Error", "Unknown")
         }
     }
 
     fun retryFunction() {
+        Log.d("retryVM", todoItemsScreenUiState.value.toString())
         if (countOfRetry == 0) {
             viewModelScope.launch {
                 delay(5000)
                 val itemOrNull = todoItemsScreenUiState.value.lastItem
                 when (todoItemsScreenUiState.value.lastOperation) {
-                    VariantFunction.FETCH -> fetchRepository()
-                    VariantFunction.ADD -> addTodoItem(itemOrNull ?: TodoItem())
+                    VariantFunction.GET -> fetchState()
+                    VariantFunction.ADD -> addTodoItem(itemOrNull ?: TodoModel())
                     VariantFunction.UPDATE -> updateTasks()
-                    VariantFunction.DELETE -> removeTodoItem(itemOrNull ?: TodoItem())
-                    VariantFunction.EDIT -> updateTodoItem(itemOrNull ?: TodoItem())
-                    null -> Log.d("Error", "Unknown")
+                    VariantFunction.DELETE -> removeTodoItem(itemOrNull ?: TodoModel())
+                    VariantFunction.EDIT -> updateTodoItem(itemOrNull ?: TodoModel())
+                    else -> Log.d("Error", "Unknown")
                 }
             }
             countOfRetry++
@@ -78,22 +90,57 @@ class ListViewModel(private val repository: TaskRepository) : ViewModel() {
         }
     }
 
-    fun fetchRepository() {
+    private fun fetchState() {
         viewModelScope.launch {
-            repository.fetchTasks()
-        }
-        fetchFlow()
-    }
+            repository.getTasks().collect { state ->
+                when (state) {
+                    is DataState.Result -> {
+                        _todoItemsScreenUiState.emit(
+                            repository.remoteDataFlow.value
+                        )
 
-    private fun fetchFlow() {
-        viewModelScope.launch {
-            repository.getTasksFlow().collect {
-                _todoItemsScreenUiState.value = it
+                    }
+
+                    is DataState.Exception -> {
+                        _todoItemsScreenUiState.emit(
+                            repository.remoteDataFlow.value
+                        )
+                    }
+
+                    else -> {
+                        _todoItemsScreenUiState.emit(
+                            repository.remoteDataFlow.value
+                        )
+
+                    }
+                }
             }
         }
     }
 
-    fun getItemById(id: UUID): TodoItem? {
+    fun updateTasks() {
+        val isEnabled = settingParameters.getNotificationEnabled()
+        if (isEnabled) {
+            viewModelScope.launch(Dispatchers.IO) {
+                repository.synchronization()
+            }
+        }
+        else {
+            errorHandlingImpl.showException(stringRecurse.getString(R.string.errorNoInternet))
+        }
+    }
+
+    fun designOfCheckboxes(executionFlag: Boolean, relevance: Relevance): Int {
+        if (executionFlag) {
+            return (R.drawable.ic_readliness_flag_checked)
+        } else if (relevance == Relevance.URGENT) {
+            return (R.drawable.ic_readliness_flag_unchecked_high)
+        } else {
+            return (R.drawable.ic_readiness_flag_normal)
+        }
+    }
+
+    fun getItemById(id: UUID): TodoModel? {
         return todoItemsScreenUiState.value.currentTodoItemList.find { it.id == id }
     }
 
@@ -108,92 +155,25 @@ class ListViewModel(private val repository: TaskRepository) : ViewModel() {
             todoItemsScreenUiState.value.copy(isVisibleDone = !oldVisibility)
     }
 
-
-    fun updateTasks() {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val settingsSource = SettingsParameters()
-                repository.updateTasks( todoItemsScreenUiState.value.allTodoItemsList,
-                    settingsSource.getRevision(), settingsSource.getToken(), settingsSource.getUsername()
-                ).collect { state ->
-                    when (state) {
-                        is NetworkState.Failure ->
-                            provideFailure(state.cause.message, VariantFunction.UPDATE)
-                        is NetworkState.Success -> {
-                            settingsSource.setRevision(state.revision)
-                            provideSuccess(state.data, true)
-                        }
-                        is NetworkState.Loading ->
-                            _todoItemsScreenUiState.value =
-                                todoItemsScreenUiState.value.copy(loading = false)
-                        else -> {}
-                    }
-                }
-            } catch (e: IOException) {
-                provideError(VariantFunction.UPDATE, e)
-            } catch (e: HttpException) {
-                provideError(VariantFunction.UPDATE, e)
-            } catch (e: UnknownHostException) {
-                provideError(VariantFunction.UPDATE, e)
-            }
-        }
-    }
-    private fun provideSuccess(list: List<TodoItem>, flag: Boolean){
-        _todoItemsScreenUiState.value =
-            todoItemsScreenUiState.value.copy(allTodoItemsList = list)
-        _todoItemsScreenUiState.value =
-            todoItemsScreenUiState.value.copy(loading = true)
-    }
-    private fun provideFailure(message: String?, variantFunction: VariantFunction){
-        _todoItemsScreenUiState.value =
-            todoItemsScreenUiState.value.copy(errorMessage = message)
-        _todoItemsScreenUiState.value =
-            todoItemsScreenUiState.value.copy(lastOperation = variantFunction)
-    }
-
-    private fun provideError(variantFunction: VariantFunction, e: Exception){
-        _todoItemsScreenUiState.value =
-            todoItemsScreenUiState.value.copy(lastOperation = variantFunction)
-        when(e){
-            is IOException -> _todoItemsScreenUiState.value =
-                todoItemsScreenUiState.value.copy(errorMessage = "Ошибка ввода-вывода: ${e.message}")
-            is HttpException -> _todoItemsScreenUiState.value =
-                todoItemsScreenUiState.value.copy(errorMessage = "Ошибка HTTP: ${e.message}")
-            is UnknownHostException -> _todoItemsScreenUiState.value =
-                todoItemsScreenUiState.value.copy(errorMessage = "Неизвестный хост: ${e.message}")
-        }
-    }
-
-    fun editExecutionFlow(item: TodoItem) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.editTaskFlow(item)
-        }
-        updateTasks()
-
-    }
-
     fun clearErrorInDataFlow() {
         repository.clearErrorInDataFlow()
     }
 
-    private fun addTodoItem(item: TodoItem) {
+    private fun addTodoItem(item: TodoModel) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.addTaskFlow(item)
+            repository.addTask(item.text, item.relevance, item.deadline)
         }
-        updateTasks()
     }
 
-    fun removeTodoItem(item: TodoItem) {
+    private fun removeTodoItem(item: TodoModel) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.removeTaskFlow(item)
+            repository.deleteTask(item)
         }
-        updateTasks()
     }
 
-    private fun updateTodoItem(item: TodoItem) {
+    fun updateTodoItem(item: TodoModel) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.editTaskFlow(item)
+            repository.updateTask(item)
         }
-        updateTasks()
     }
 }

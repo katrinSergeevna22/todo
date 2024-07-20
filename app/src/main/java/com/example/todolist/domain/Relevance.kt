@@ -1,5 +1,6 @@
 package com.example.todolist.domain
 
+
 import android.content.Context
 import com.example.todolist.R
 
@@ -11,17 +12,28 @@ enum class Relevance {
     LOW,
     URGENT
 }
-fun Relevance.textName(context: Context) : String{
+
+fun Relevance.textName(): String {
     return when (this) {
-        Relevance.ORDINARY -> context.getString(R.string.ordinary)
-        Relevance.LOW -> context.getString(R.string.lowRu)
-        Relevance.URGENT -> context.getString(R.string.urgentInArray)
+        Relevance.ORDINARY -> "basic"
+        Relevance.LOW -> "low"
+        Relevance.URGENT -> "important"
     }
 }
-fun Relevance.textNameForJson(context: Context) : String {
+
+fun Relevance.textNameForJson(): Int {
     return when (this) {
-        Relevance.ORDINARY -> context.getString(R.string.basic)
-        Relevance.LOW -> context.getString(R.string.low)
-        Relevance.URGENT -> context.getString(R.string.important)
+        Relevance.ORDINARY -> R.string.basic
+        Relevance.LOW -> R.string.low
+        Relevance.URGENT -> R.string.important
+    }
+}
+
+fun String.numberToRelevance(): Relevance {
+    return when (this) {
+        "0" -> Relevance.ORDINARY
+        "1" -> Relevance.LOW
+        "2" -> Relevance.URGENT
+        else -> Relevance.ORDINARY
     }
 }
