@@ -28,7 +28,7 @@ class RemoteRepository @Inject constructor(
     private val stringProvider: IStringProvider,
 ) : ITaskLocalRepository {
     private val _remoteDataFlow = MutableStateFlow(TodoItemScreenUiState())
-    val remoteDataFlow = _remoteDataFlow.asStateFlow()
+    override val remoteDataFlow = _remoteDataFlow.asStateFlow()
 
     override fun getTasks(): Flow<DataState<List<TodoModel>>> = flow {
         databaseSource.getTasks().collect { state ->

@@ -3,10 +3,10 @@ package com.example.todolist.presentation.viewModel
 import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModel
+import com.example.todolist.domain.providers.IStringProvider
 import com.example.todolist.domain.repository.ISettingRepository
 import com.example.todolist.presentation.ui.theme.ThemeOption
 import com.example.todolist.presentation.ui.theme.textName
-import com.example.todolist.domain.providers.IStringProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -15,11 +15,11 @@ class SettingViewModel @Inject constructor(
     private val settingParameters: ISettingRepository,
     private val stringRecurse: IStringProvider,
 ) : ViewModel() {
-    fun getTheme() : ThemeOption{
+    fun getTheme(): ThemeOption {
         return ThemeOption.entries[settingParameters.getSelectedTheme()]
     }
 
-    private fun setTheme(themeOption: ThemeOption){
+    private fun setTheme(themeOption: ThemeOption) {
         settingParameters.setSelectedTheme(themeOption.ordinal)
     }
 

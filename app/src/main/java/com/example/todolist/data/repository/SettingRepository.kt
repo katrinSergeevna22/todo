@@ -30,7 +30,7 @@ class SettingRepository @Inject constructor(
         const val USERNAME_DEFAULT: String = "Pervuhina Ekaterina"
 
         const val TOKEN: String = "TOKEN"
-        const val TOKEN_DEFAULT: String = ""
+        const val TOKEN_DEFAULT: String = "Gil-galad"
 
         const val NOTIFICATION_ENABLED: String = "NOTIFICATION_ENABLED"
         const val NOTIFICATION_ENABLED_DEFAULT: Boolean = true

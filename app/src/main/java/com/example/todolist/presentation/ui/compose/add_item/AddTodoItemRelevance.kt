@@ -1,6 +1,5 @@
 package com.example.todolist.presentation.ui.compose.add_item
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +19,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,22 +45,26 @@ fun AddTodoItemRelevance(
         selectedImportance = it
         viewModel.setImportant(selectedImportance)
     })
-
 }
 
 @Composable
-fun SpinnerRelevance(selectedIndex: Int, onItemSelected: (Int) -> Unit) {
+fun SpinnerRelevance(
+    selectedIndex: Int,
+    onItemSelected: (Int) -> Unit,
+) {
     val items = stringArrayResource(id = R.array.relevanceOfTodo)
-
     var expanded by remember { mutableStateOf(false) }
-
+    val contentDescriptionSelectImportance =
+        stringResource(id = R.string.select_importance)
     Box(
         modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.CenterStart
     ) {
-
         TextButton(
             onClick = { expanded = true },
+            modifier = Modifier.semantics {
+                contentDescription = contentDescriptionSelectImportance
+            }
         ) {
             Text(
                 text = items[selectedIndex],
@@ -67,25 +72,26 @@ fun SpinnerRelevance(selectedIndex: Int, onItemSelected: (Int) -> Unit) {
                 style = MaterialTheme.typography.bodyMedium,
             )
         }
+
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-
-            ) {
+        ) {
             items.forEachIndexed { index, item ->
-                DropdownMenuItem({
-                    Text(
-                        text = item,
-                        color = if (index == items.size - 1) Colors.Red else MaterialTheme.colorScheme.onPrimary,
-                        fontSize = 16.sp,
-                        fontFamily = FontFamily.Default
-                    )
-                },
+                DropdownMenuItem(
+                    {
+                        Text(
+                            text = item,
+                            color = if (index == items.size - 1) Colors.Red else MaterialTheme.colorScheme.onPrimary,
+                            fontSize = 16.sp,
+                            fontFamily = FontFamily.Default
+                        )
+                    },
                     onClick = {
                         onItemSelected(index)
                         expanded = false
-
-                    })
+                    },
+                )
             }
         }
     }

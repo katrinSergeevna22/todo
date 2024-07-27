@@ -11,23 +11,49 @@
     <string name="important">important</string>
 
     <string name="my_case">Мои дела</string>
-    <string name="done">Выполнено</string>
+    <string name="done">Выполнено - %1$s</string>
     <string name="importance">Важность</string>
     <string name="make_it_to">Сделать до</string>
     <string name="delete">Удалить</string>
     <string name="update">Обновить</string>
     <string name="repeat">Повторить</string>
-    <string name="save">СОХРАНИТЬ</string>
-    <string name="hintForEditMultiText">Что надо сделать...</string>
+    <string name="save">Сохранить</string>
+    <string name="hintForEditMultiText">Напишите что нужно сделать</string>
     <string name="textForEmptyToast">Пожалуйста, введите описание дела</string>
+    <string name="toastAddOrUpdateNew">Новые данные успешно внесены</string>
+    <string name="toastDelete">Дело успешно удалено</string>
+    <string name="select_importance">Выбрана важность</string>
+    <string name="selected_importance">Выберите важность из выпадающего списка</string>
+    <string name="toastAddDeadline">Добавлен дедлайн</string>
 
-    <string name="lightThemePalitra">Светлая тема</string>
-    <string name="darkThemePalitra">Темная тема</string>
+    <string name="lightThemePalette">Светлая тема</string>
+    <string name="darkThemePalette">Темная тема</string>
+    <string name="textStyle">Текстовые стили</string>
 
-    <string name="descriptionButtonReady">Кнопка готовности дела</string>
-    <string name="descriptionButtonDelete">Кнопка удалить</string>
+    <string name="descriptionButtonReady">Изменить готовность дела: %1$s</string>
+    <string name="descriptionButtonDelete">Удалить дело</string>
+    <string name="descriptionIconButtonDelete">Иконка удалить дело</string>
+    <string name="descriptionButtonDeleteDisabled">Отключена</string>
     <string name="descriptionExcUpdate">При обновлении: ошибка ввода-вывода:</string>
-    <string name="descriptionButtonEdit">Кнопка для редактирования</string>
+    <string name="descriptionButtonEdit">Перейти на экран для редактирования</string>
+    <string name="descriptionButtonNavToAdd">Перейти на экран добавления</string>
+    <string name="descriptionButtonNavToSetting">Перейти на экран настроек</string>
+    <string name="descriptionButtonNavToAboutApp">Перейти на экран о приложении</string>
+    <string name="descriptionButtonCloseSettingScreen">Закрыть экран настроек</string>
+    <string name="descriptionButtonCloseAddScreen">Закрыть экран добавления новой информации</string>
+    <string name="descriptionButtonSwitchVisibility">Поменять видимость выполненных дел</string>
+    <string name="descriptionButtonSave">Сохранить дело</string>
+    <string name="descriptionButtonUpdate">Обновить список</string>
+    <string name="descriptionButtonSnackbarClose">Закрыть всплывающее уведомление</string>
+    <string name="descriptionButtonApply">Применить тему: %1$s</string>
+    <string name="descriptionSwitcher">Добавить дедлайн</string>
+    <string name="descriptionSwitcherOff">Убрать дедлайн</string>
+    <string name="descriptionClickSwitcherOffToOn">Открыть календарь</string>
+    <string name="descriptionClickSwitcherOnToOff">Отключить</string>
+
+    <string name="stateDescriptionBtnReadyOn">Дело выполнено</string>
+    <string name="stateDescriptionBtnReadyOff">Дело не выполнено</string>
+    <string name="stateDescriptionBtnReadyImportance">Дело высокой важности невыполнено</string>
 
     <string name="errorSynchronized">Ошибка синхронизации! Проверьте подключение к интернету!</string>
     <string name="errorDataBaseRead">Ошибка чтения из базы данных!</string>
@@ -42,7 +68,7 @@
 
     <string name="setting">Настройки</string>
     <string name="selectedTheme">Выберите тему:</string>
-    <string name="selectTheme">ПРИМЕНИТЬ</string>
+    <string name="buttonApply">применить</string>
 
     <string name="lightTheme">Всегда светлая</string>
     <string name="darkTheme">Всегда темная</string>

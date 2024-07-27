@@ -29,11 +29,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
     buildFeatures {
         viewBinding = true
@@ -76,7 +76,8 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview-android:1.6.8")
     implementation("androidx.room:room-common:2.6.1")
     implementation("androidx.hilt:hilt-common:1.2.0")
-    debugImplementation ("androidx.compose.ui:ui-tooling:1.6.8")
+
+    debugImplementation("androidx.compose.ui:ui-tooling:1.6.8")
 
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
@@ -86,8 +87,48 @@ dependencies {
     implementation("androidx.work:work-runtime-ktx:2.7.0")
 
     testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+
+    testImplementation("io.mockk:mockk:1.13.12")
+    //  testImplementation("org.mockito:mockito-core:2.19.0")
+
+    testImplementation("org.mockito:mockito-core:5.12.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+
+    // Для Turbine
+    testImplementation("app.cash.turbine:turbine:1.1.0")
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
+    testImplementation("org.mockito:mockito-inline:5.2.0")
+
+    // Для Kotlin Coroutines
+    //testImplementation("io.mockk:mockk:2.19.0")
+    // Для тестирования Compose
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.6.8")
+    androidTestImplementation("androidx.compose.ui:ui-test-manifest:1.6.8")
+    androidTestImplementation("androidx.compose.ui:ui-test:1.6.8")
+
+//
+// testImplementation(libs.androidx.ui.test.junit4)
+//    testImplementation(libs.mockk)
+//    testImplementation(libs.ktor.mock)
+//    androidTestImplementation(libs.androidx.junit.ktx)
+//    androidTestImplementation(libs.androidx.test.runner)
+
+    // Для Hilt
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.51.1")
+    kaptAndroidTest("com.google.dagger:hilt-compiler:2.51.1")
+
+    androidTestImplementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+
+    // Для unit-тестов
+    //testImplementation("org.mockito:mockito-core:4.0.0")
+
+    // Для UI-тестов с Jetpack Compose
+    //androidTestImplementation("androidx.compose.ui:ui-test-manifest:1.6.8")
+
+    // MockWebServer для тестирования сетевых вызовов
+    //androidTestImplementation("com.squareup.okhttp3:mockwebserver:4.9.1")
 
     // Hilt
     implementation("com.google.dagger:hilt-android:2.51.1")

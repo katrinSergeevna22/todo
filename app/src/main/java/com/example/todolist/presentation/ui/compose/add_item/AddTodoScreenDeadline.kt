@@ -1,6 +1,8 @@
 package com.example.todolist.presentation.ui.compose.add_item
 
 import android.app.DatePickerDialog
+import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,13 +21,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.example.todolist.R
 import com.example.todolist.presentation.ui.theme.Colors
 import com.example.todolist.presentation.viewModel.AddTodoItemViewModel
-import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Locale
 
 @Composable
 fun AddTodoScreenDeadline(viewModel: AddTodoItemViewModel) {
@@ -44,7 +46,8 @@ fun AddTodoScreenDeadline(viewModel: AddTodoItemViewModel) {
         },
         calendar.get(Calendar.YEAR),
         calendar.get(Calendar.MONTH),
-        calendar.get(Calendar.DAY_OF_MONTH), )
+        calendar.get(Calendar.DAY_OF_MONTH),
+    )
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -54,11 +57,11 @@ fun AddTodoScreenDeadline(viewModel: AddTodoItemViewModel) {
             text = stringResource(id = R.string.make_it_to),
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.primary,
-            //modifier=Modifier.padding(start=16.dp)
         )
 
         Spacer(modifier = Modifier.weight(1f))
-
+        val descriptionSwitcherOn = stringResource(id = R.string.descriptionSwitcher)
+        val descriptionSwitcherOff = stringResource(id = R.string.descriptionSwitcherOff)
         Switch(
             checked = isDeadlineEnabled,
             onCheckedChange = {
@@ -78,11 +81,20 @@ fun AddTodoScreenDeadline(viewModel: AddTodoItemViewModel) {
                 checkedTrackColor = Colors.LightBlue,
                 uncheckedBorderColor = Color.LightGray
             ),
-
-            )
+            modifier = Modifier
+                .semantics {
+                    contentDescription =
+                        if (!isDeadlineEnabled) {
+                            descriptionSwitcherOn
+                        } else {
+                            descriptionSwitcherOff
+                        }
+                }
+        )
     }
 
     if (isDeadlineEnabled && selectedDate != null) {
+        Toast.makeText(LocalContext.current, stringResource(id = R.string.toastAddDeadline), Toast.LENGTH_SHORT).show()
         Text(
             text = viewModel.formatDate(selectedDate),
             style = MaterialTheme.typography.bodySmall,
@@ -90,6 +102,4 @@ fun AddTodoScreenDeadline(viewModel: AddTodoItemViewModel) {
             modifier = Modifier.padding(top = 4.dp)
         )
     }
-
-
 }

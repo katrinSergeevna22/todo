@@ -4,9 +4,9 @@ import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class TodoApplication: Application() {
+class TodoApplication : Application() {
 
-//    @Inject
+    //    @Inject
 //    lateinit var networkChangeReceiver: NetworkChangeReceiver
     override fun onCreate() {
         super.onCreate()

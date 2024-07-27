@@ -28,8 +28,8 @@ fun AppNavigation() {
             TodoListScreen(
                 listViewModel,
                 actions.selectedItem,
+                actions.onSettingScreen,
                 actions.onAboutAppScreen,
-                actions.onSettingScreen
             )
         }
         composable("${AppDestination.ADD_TODO_LIST}/{itemId}") { backStackEntry ->

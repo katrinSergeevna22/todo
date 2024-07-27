@@ -46,6 +46,9 @@
           "items": [
             {
               "type": "image",
+              "accessibility": {
+                "description": "Эмблема приложения"
+              },
               "image_url": "https://brandyellen.com/wp-content/uploads/2021/03/Techniques-to-Improve-Your-Time-Management-Skills-2.png",
               "margins": {
                 "top": 10,
@@ -57,7 +60,7 @@
             {
               "type": "tutorialCard",
               "title": "Todo List App",
-              "body": "Приложение Todo List создано, для того, чтобы помочь пользователю распланировать свою жизнь.\n\nВ приложение можно добавлять свои дела, редактировать их и удалять.\n\nПользователь может проставить важность дела и дедлайн.\n\nВ приложение добавлена новая функция! Теперь можно выбрать тему!"
+              "body": "Приложение Todo List создано, для того, чтобы помочь пользователю распланировать свою жизнь.\n\nВ приложение можно добавлять свои дела, редактировать их и удалять."
             },
             {
               "type": "text",
@@ -84,6 +87,9 @@
                       "value": 150
                     },
                     "alignment_horizontal": "center",
+                    "accessibility": {
+                      "description": "Картинка с грустным смайликом"
+                    },
                     "image_url": "https://th.bing.com/th/id/OIP.d38ULdQdEfjou4yINH-LNQHaHa?pid=ImgDet&w=161&h=161&c=7",
                     "actions": [
                       {
@@ -97,11 +103,14 @@
                   "state_id": "liked",
                   "div": {
                     "type": "image",
+                    "accessibility": {
+                      "description": "Картинка с веселым смайликом"
+                    },
                     "image_url": "https://th.bing.com/th/id/OIP.mXcvgeiL4ugSqmqwbSZlsgHaHa?pid=ImgDet&w=155&h=155&c=7&dpr=1,5",
                     "alignment_horizontal": "center",
                     "width": {
                       "type": "fixed",
-                      "value": 250
+                      "value": 200
                     },
                     "actions": [
                       {

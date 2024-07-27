@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit
 * @param context Application context
 * @param workerParams Worker job parameters
  **/
-class DataRefreshWorker(appContext: Context, workerParams: WorkerParameters) :
+class DataRefreshWorker1(appContext: Context, workerParams: WorkerParameters) :
     CoroutineWorker(appContext, workerParams) {
     override suspend fun doWork(): Result {
         //val d: ListViewModel = rememberViewModel().fetchRepository()

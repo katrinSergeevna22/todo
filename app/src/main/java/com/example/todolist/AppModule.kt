@@ -10,13 +10,13 @@ import com.example.todolist.data.repository.RemoteRepository
 import com.example.todolist.data.repository.SettingRepository
 import com.example.todolist.domain.IDatabaseSource
 import com.example.todolist.domain.INetworkDatasource
-import com.example.todolist.domain.repository.ISettingRepository
-import com.example.todolist.domain.repository.ITaskLocalRepository
-import com.example.todolist.domain.repository.ITaskRepository
 import com.example.todolist.domain.errorHandling.ErrorHandlingImpl
 import com.example.todolist.domain.errorHandling.IErrorHandling
 import com.example.todolist.domain.providers.IStringProvider
 import com.example.todolist.domain.providers.StringProviderImpl
+import com.example.todolist.domain.repository.ISettingRepository
+import com.example.todolist.domain.repository.ITaskLocalRepository
+import com.example.todolist.domain.repository.ITaskRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -39,21 +39,6 @@ object AppModule {
     fun provideDatabaseSource(dao: TodoDao): IDatabaseSource {
         return DatabaseSource(dao)
     }
-
-
-    /*
-        @Provides
-        @Singleton
-        fun provideTaskRepository(
-            networkDataSource: INetworkDatasource,
-            settingRepository: ISettingRepository,
-            databaseSource: IDatabaseSource,
-        ): ITaskRepository {
-            return TaskRepository(networkDataSource, settingRepository, databaseSource)
-        }
-
-     */
-
 
     @Provides
     @Singleton
@@ -100,6 +85,5 @@ object AppModule {
     fun provideErrorHandlingImpl(@ApplicationContext context: Context): IErrorHandling {
         return ErrorHandlingImpl(context)
     }
-
 }
 

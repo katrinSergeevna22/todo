@@ -2,7 +2,6 @@ package com.example.todolist.presentation.ui.compose.add_item
 
 import android.widget.Toast
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -13,7 +12,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -24,8 +22,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -47,15 +50,19 @@ fun AddScreenToolbar(
     val scrollState = rememberScrollState()
     val toolbarElevation by animateDpAsState(if (scrollState.value > 0) 4.dp else 0.dp)
     val warningText = stringResource(id = R.string.textForEmptyToast)
+    val warningTextAfterAdded = stringResource(id = R.string.toastAddOrUpdateNew)
+    val descriptionButtonSave = stringResource(id = R.string.descriptionButtonSave)
     TopAppBar(
         title = {},
         navigationIcon = {
             IconButton(onClick = { onBack() }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_close),
-                    contentDescription = null,
+                    contentDescription = stringResource(id = R.string.descriptionButtonCloseAddScreen),
                     tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier
+                        .size(24.dp)
+                        .semantics { traversalIndex = 1f }
                 )
             }
         },
@@ -64,10 +71,15 @@ fun AddScreenToolbar(
                 onClick = {
                     if (viewModel.textIsNotEmpty()) {
                         viewModel.saveItemByButton(
-                            item,
-                            context
+                            item
                         )
                         onBack()
+                        Toast.makeText(
+                            context,
+                            warningTextAfterAdded,
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
                     } else {
                         Toast.makeText(
                             context,
@@ -76,10 +88,6 @@ fun AddScreenToolbar(
                         )
                             .show()
                     }
-
-                },
-                modifier = Modifier.clickable {
-                    isPressed = !isPressed
                 },
                 elevation = ButtonDefaults.elevatedButtonElevation(
                     defaultElevation = 8.dp,
@@ -88,25 +96,30 @@ fun AddScreenToolbar(
                 colors =
                 if (!isPressed) {
                     ButtonDefaults.buttonColors(MaterialTheme.colorScheme.background)
-                }
-                else {
+                } else {
                     ButtonDefaults.buttonColors(MaterialTheme.colorScheme.surfaceTint)
-                }
-
+                },
+                modifier = Modifier
+                    .testTag("addButton")
+                    .semantics {
+                        contentDescription = descriptionButtonSave
+                        traversalIndex = 2f
+                    },
             ) {
                 Text(
-                    text = stringResource(id = R.string.save),
+                    text = stringResource(id = R.string.save).uppercase(),
                     fontFamily = FontFamily.Default,
                     fontWeight = FontWeight.Black,
                     fontSize = 14.sp,
                     color =
                     if (!isPressed) {
                         Colors.Blue
-                    }
-                    else {
+                    } else {
                         Colors.White
                     },
-                    modifier = Modifier.padding(end = 16.dp)
+                    modifier = Modifier
+                        .padding(end = 16.dp)
+                        .clearAndSetSemantics { },
                 )
             }
         },
@@ -115,5 +128,4 @@ fun AddScreenToolbar(
         modifier = Modifier
             .shadow(elevation = toolbarElevation)
     )
-
 }

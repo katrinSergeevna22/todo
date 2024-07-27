@@ -1,14 +1,11 @@
 package com.example.todolist.presentation.ui.compose.todo_list
 
-import android.util.Log
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.IconButton
@@ -25,10 +22,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextDecoration
@@ -40,6 +38,7 @@ import androidx.constraintlayout.compose.Dimension
 import com.example.todolist.R
 import com.example.todolist.domain.Relevance
 import com.example.todolist.domain.model.TodoModel
+import com.example.todolist.domain.textName
 import com.example.todolist.presentation.ui.theme.Colors
 import java.util.UUID
 
@@ -52,14 +51,14 @@ fun TodoItemCard(
     formatDate: (Long?) -> String,
     designOfCheckboxes: (Boolean, Relevance) -> Int,
 ) {
-
     var checked by remember { mutableStateOf(item.executionFlag) }
-    var selectRelevance by remember { mutableStateOf(item.relevance) }
-    val context = LocalContext.current
+    val stateDescriptionOn = stringResource(id = R.string.stateDescriptionBtnReadyOn)
+    val stateDescriptionOff = stringResource(id = R.string.stateDescriptionBtnReadyOff)
+    val stateDescriptionImportance =
+        stringResource(id = R.string.stateDescriptionBtnReadyImportance)
     Card(
         modifier = Modifier
             .fillMaxWidth(),
-
         colors = CardDefaults.cardColors(
             MaterialTheme.colorScheme.surface,
             colorResource(id = R.color.black),
@@ -88,16 +87,27 @@ fun TodoItemCard(
                         top.linkTo(parent.top)
                         start.linkTo(parent.start)
                     }
-                    //.shadow(elevation = if (checked) 12.dp else 0.dp, shape = CircleShape)
+                    .semantics {
+                        stateDescription =
+                            if (item.executionFlag) stateDescriptionOn
+                            else if (item.relevance == Relevance.URGENT) stateDescriptionImportance
+                            else stateDescriptionOff
+                    }
             ) {
                 Image(
-                    painter =
-                    painterResource(id = designOfCheckboxes(item.executionFlag, item.relevance)),
-                    contentDescription = stringResource(id = R.string.descriptionButtonReady),
+                    painter = painterResource(
+                        id = designOfCheckboxes(
+                            item.executionFlag,
+                            item.relevance
+                        )
+                    ),
+                    contentDescription = stringResource(
+                        id = R.string.descriptionButtonReady,
+                        item.text
+                    ),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.size(24.dp),
-
-                    )
+                )
             }
             if (item.executionFlag) {
                 Text(
@@ -133,20 +143,19 @@ fun TodoItemCard(
 
                 )
             }
-            var isButtonPressed by remember { mutableStateOf(false) }
+            val isButtonPressed by remember { mutableStateOf(false) }
             val shadowElevation by animateDpAsState(targetValue = if (isButtonPressed) 8.dp else 0.dp)
+
             IconButton(
                 onClick = { navToAdd(item.id) },
                 colors =
                 if (!isButtonPressed) {
                     IconButtonDefaults.iconButtonColors(MaterialTheme.colorScheme.background)
-                }
-                else {
+                } else {
                     IconButtonDefaults.iconButtonColors(MaterialTheme.colorScheme.surfaceTint)
                 },
                 modifier = Modifier
                     .size(24.dp)
-                    //.background(Color.Transparent)
                     .constrainAs(infoButton) {
                         top.linkTo(parent.top)
                         end.linkTo(parent.end)
@@ -170,7 +179,6 @@ fun TodoItemCard(
                         top.linkTo(textOfTodoItem.bottom, margin = 4.dp)
                         start.linkTo(readinessFlag.end, margin = 12.dp)
                     }
-
                 )
             }
         }

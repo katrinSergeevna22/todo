@@ -1,7 +1,6 @@
 package com.example.todolist.presentation.ui.compose.navigation
 
 import android.util.Log
-import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import com.example.todolist.presentation.ui.compose.divKit.delView
 import java.util.UUID
