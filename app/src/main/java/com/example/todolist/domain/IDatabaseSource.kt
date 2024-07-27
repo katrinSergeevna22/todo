@@ -14,15 +14,9 @@ interface IDatabaseSource {
 
     suspend fun deleteTask(task: TodoModel)
 
-    /*
-    * Synchronous method in order not to cycle in Flow data
-    * */
     suspend fun getTasksAsList(): List<TodoModel>
 
     suspend fun getTaskAsEntity(uuid: UUID): TodoModel?
 
-    /*
-    * Synchronous overwriting database
-    * */
     fun overwrite(tasks: List<TodoModel>)
 }

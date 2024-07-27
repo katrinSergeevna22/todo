@@ -22,38 +22,7 @@ data class TodoModel(
     var executionFlag: Boolean,
     val dateOfCreating: Long,
     var dateOfEditing: Long? = null,
-)/* : Parcelable {
-    constructor(parcel: Parcel) : this(
-        parcel.readString() ?: "",
-        parcel.readString() ?: "",
-        parcel.readString() ?: "",
-        parcel.readString(),
-        parcel.readByte() != 0.toByte(),
-        parcel.readString() ?: ""
-    )
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(id)
-        parcel.writeString(text)
-        parcel.writeString(relevance)
-        parcel.writeString(deadline)
-        parcel.writeByte(if (executionFlag) 1 else 0)
-        parcel.writeString(dateOfCreating)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<TodoItem> {
-        override fun createFromParcel(parcel: Parcel): TodoItem {
-            return TodoItem(parcel)
-        }
-
-        override fun newArray(size: Int): Array<TodoItem?> {
-            return arrayOfNulls(size)
-        }
-        */
+)
 {
     constructor() : this(UUID.randomUUID(), "", Relevance.ORDINARY, null, false, 0L)
 

@@ -2,6 +2,7 @@ package com.example.todolist.data.repository
 
 import android.util.Log
 import com.example.todolist.R
+import com.example.todolist.data.network.util.NetworkException
 import com.example.todolist.data.network.util.NetworkState
 import com.example.todolist.data.network.util.TodoItemScreenUiState
 import com.example.todolist.domain.IDatabaseSource
@@ -10,10 +11,11 @@ import com.example.todolist.domain.VariantFunction
 import com.example.todolist.domain.model.TodoModel
 import com.example.todolist.domain.repository.ISettingRepository
 import com.example.todolist.domain.repository.ITaskRepository
-import com.example.todolist.errorHandling.IErrorHandling
-import com.example.todolist.providers.IStringProvider
+import com.example.todolist.domain.errorHandling.IErrorHandling
+import com.example.todolist.domain.providers.IStringProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import java.io.IOException
 import javax.inject.Inject
 
 
@@ -75,15 +77,23 @@ class NetworkRepository @Inject constructor(
         }
     }
 
+    @Throws(NetworkException::class)
     override suspend fun synchronize() {
         if (settingParameters.getNotificationEnabled() && settingParameters.getToken() != "") {
             networkSource.getTasks(settingParameters.getToken()).collect { state ->
                 when (state) {
-                    is NetworkState.Failure -> errorHandling.showException(
-                        stringProvider.getString(
-                            R.string.errorSynchronized
-                        )
-                    )
+                    is NetworkState.Failure ->
+                        try{
+                            errorHandling.showException(
+                                stringProvider.getString(
+                                    R.string.errorSynchronized
+                                )
+                            )
+                        } catch (e: IOException){
+                            Log.d("IOException", e.toString())
+                        } catch (e: NetworkException){
+                            Log.d("NetworkException", e.toString())
+                        }
 
                     is NetworkState.Success -> merge(state.revision, state.data)
                     else -> {}

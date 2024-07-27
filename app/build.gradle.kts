@@ -68,8 +68,8 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha13")
     implementation("androidx.compose.foundation:foundation-android:1.6.8")
 
-    implementation("androidx.activity:activity-compose:1.7.2")
-    implementation("androidx.compose.material3:material3:1.0.0")
+    implementation("androidx.activity:activity-compose:1.9.0")
+    implementation("androidx.compose.material3:material3:1.2.1")
     implementation("com.google.accompanist:accompanist-themeadapter-material3:0.28.0")
     implementation("androidx.navigation:navigation-runtime-ktx:2.7.7")
     implementation("androidx.navigation:navigation-compose:2.7.7")
@@ -99,4 +99,9 @@ dependencies {
     implementation("androidx.room:room-runtime:2.6.1")
     kapt("androidx.room:room-compiler:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
+
+    implementation("com.yandex.div:div-core:3.0.1")
+    implementation("com.yandex.div:div:3.0.1")
+    implementation("com.yandex.div:div-json:3.0.1")
+    implementation("com.squareup.picasso:picasso:2.8")
 }

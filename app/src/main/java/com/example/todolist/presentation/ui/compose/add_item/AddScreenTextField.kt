@@ -1,5 +1,6 @@
 package com.example.todolist.presentation.ui.compose.add_item
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -16,25 +17,30 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.todolist.R
+import com.example.todolist.data.network.util.AddItemScreenUIState
 import com.example.todolist.domain.model.TodoModel
 import com.example.todolist.presentation.ui.theme.Colors
 import com.example.todolist.presentation.viewModel.AddTodoItemViewModel
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun AddScreenTextField(
     item: TodoModel?,
     setTextToState: (String) -> Unit,
-    viewModel: AddTodoItemViewModel,
+    addTodoUiState: StateFlow<AddItemScreenUIState>
+    //viewModel: AddTodoItemViewModel,
 ) {
-    var text = viewModel.getAddTodoUiState().collectAsState()
+    //var text = viewModel.getAddTodoUiState().collectAsState()
+    var uiState = addTodoUiState.collectAsState()
     BasicTextField(
-        value = text.value.description,
+        value = uiState.value.description,
         onValueChange = {
             setTextToState(it)
         },
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface)
+            .animateContentSize()
             .padding(16.dp)
             .heightIn(min = 104.dp),
 
@@ -46,7 +52,7 @@ fun AddScreenTextField(
 
 
         decorationBox = { innerTextField ->
-            if (text.value.description == "") {
+            if (uiState.value.description == "") {
                 Text(
                     text = stringResource(id = R.string.hintForEditMultiText),
                     style = MaterialTheme.typography.bodySmall,

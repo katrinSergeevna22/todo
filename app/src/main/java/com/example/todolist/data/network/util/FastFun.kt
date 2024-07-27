@@ -21,7 +21,6 @@ fun TodoModel.toEntity(): TodoEntity = TodoEntity(
 fun TodoModel.forJson(login: String): TodoItemForJson = TodoItemForJson(
     id,
     text,
-    //context.getString(relevance.textNameForJson()),
     relevance.textName(),
     deadline,
     executionFlag,

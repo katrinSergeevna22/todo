@@ -1,4 +1,4 @@
-package com.example.todolist.providers
+package com.example.todolist.domain.providers
 
 interface IStringProvider {
     fun getString(stringId: Int): String

@@ -4,19 +4,31 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Bundle
+import android.util.Log
+import android.view.ContextThemeWrapper
+import android.view.View
+import android.widget.LinearLayout
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import com.example.todolist.divKit.AssetReader
+import com.example.todolist.divKit.Div2ViewFactory
+import com.example.todolist.divKit.PicassoDivImageLoader
 import com.example.todolist.domain.repository.ISettingRepository
 //import androidx.activity.compose.setContent
 import com.example.todolist.presentation.ui.compose.navigation.AppNavigation
 import com.example.todolist.presentation.ui.theme.ToDoListComposeTheme
 import com.example.todolist.presentation.viewModel.ListViewModel
+import com.yandex.div.core.Div2Context
+import com.yandex.div.core.DivConfiguration
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -61,47 +73,8 @@ class MainActivity : AppCompatActivity() {
         }
         connectivityManager.registerDefaultNetworkCallback(networkCallback)
     }
-
 }
 
-
-/*
-val repository = TaskRepository()
-val constraints = Constraints.Builder()
-    .setRequiredNetworkType(NetworkType.CONNECTED)
-    .build()
-
-val myWorkRequest = PeriodicWorkRequestBuilder<DataRefreshWorker>(8, TimeUnit.HOURS)
-    .setConstraints(constraints)
-    .build()
-
-WorkManager.getInstance(this).enqueue(myWorkRequest)
-
-// Проверка доступности интернета и автоматическая загрузка данных
-val connectivityManager =
-    getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-val networkCallback = object : ConnectivityManager.NetworkCallback() {
-    override fun onAvailable(network: Network) {
-        super.onAvailable(network)
-        //val settingRepository = SettingsParameters()
-        // Отправить запрос на получение данных
-        CoroutineScope(Dispatchers.IO).launch {
-            repository.getTasksFlow()
-            //repository.getTasks(settingRepository.getToken())
-        }
-    }
-}
-
-connectivityManager.registerDefaultNetworkCallback(networkCallback)
-}
-}
-//        WorkManager.initialize(this, configurationWorker)
-//        WorkManager.getInstance(this).enqueue(myWorkRequest)
-
- */
-//    }
-
-//}
 
 /* View
 class MainActivity : AppCompatActivity() {

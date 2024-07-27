@@ -1,10 +1,18 @@
 package com.example.todolist.presentation.ui.compose.todo_list
 
+import AddTodoItemScreen
 import android.annotation.SuppressLint
 import android.util.Log
-import androidx.compose.animation.core.animateDpAsState
+import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.*
@@ -12,8 +20,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -21,67 +27,81 @@ import androidx.compose.material3.FloatingActionButton
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.todolist.R
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.unit.IntOffset
 import com.example.todolist.presentation.ui.theme.Colors
 import com.example.todolist.presentation.viewModel.ListViewModel
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.zIndex
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.todolist.presentation.viewModel.AddTodoItemViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import java.util.UUID
 
 @SuppressLint("StaticFieldLeak")
 
 //val todoList by viewModel.newTodoList.collectAsState(coroutineContext)
 @OptIn(ExperimentalMaterial3Api::class)
-//@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun TodoListScreen(
     viewModel: ListViewModel,
     navToAdd: (UUID?) -> Unit,
+    navToSetting: () -> Unit,
+    navToAboutApp: () -> Unit
 ) {
-    val scrollBehavior =
-        TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val todoItemScreenUiState = viewModel.getTodoItemsScreenUiState().collectAsState()
     val listState = rememberLazyListState()
+    var isAddScreenVisible by remember { mutableStateOf(false) }
+
+    // Функция для открытия экрана добавления с анимацией
+    val openAddScreen: (UUID?) -> Unit = { itemId ->
+        isAddScreenVisible = true
+        navToAdd(itemId)
+    }
+
+    // Функция для закрытия экрана добавления с анимацией
+    val closeAddScreen: () -> Unit = {
+        isAddScreenVisible = false
+    }
 
     Scaffold(
-
         containerColor = colorResource(id = R.color.backPrimaryColor),
         topBar = {
-            TodoListToolBar(scrollBehavior = scrollBehavior, viewModel)
+            TodoListToolBar(scrollBehavior = scrollBehavior, navToAboutApp, navToSetting, viewModel)
         },
-
         modifier = Modifier
             .fillMaxSize()
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .background(MaterialTheme.colorScheme.background),
         floatingActionButton = {
-
             FloatingActionButton(
-                onClick = { navToAdd(null) },
+                onClick = { openAddScreen(null) },
                 containerColor = colorResource(id = R.color.blue),
                 contentColor = Color.White,
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier
+                    .padding(16.dp)
+                    .alpha(if (isAddScreenVisible) 0f else 1f),
                 shape = CircleShape,
             ) {
                 Icon(
@@ -90,15 +110,38 @@ fun TodoListScreen(
                     tint = Colors.White
                 )
             }
+
+            AnimatedVisibility(
+                visible = isAddScreenVisible,
+                enter = fadeIn(animationSpec = tween(durationMillis = 500)),
+                exit = fadeOut(animationSpec = tween(durationMillis = 500))
+            ) {
+                AddTodoItemScreen(
+                    item = null,
+                    viewModel = hiltViewModel(),
+                    onBack = closeAddScreen
+                )
+            }
         }
+
+
     ) { innerPadding ->
-        Log.d("LoadScreen", todoItemScreenUiState.value.loading.toString())
+
         if (todoItemScreenUiState.value.loading) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background),
+                contentAlignment = Alignment.Center
+            ) {
                 CircularProgressBar()
             }
         } else {
-            Column {
+            Column(
+                Modifier
+                    .background(MaterialTheme.colorScheme.background)
+                    .fillMaxSize()
+            ) {
                 LazyColumn(
                     state = listState,
                     modifier = Modifier
@@ -115,15 +158,20 @@ fun TodoListScreen(
 
                         TodoItemCard(
                             item,
-                            navToAdd,
+                            openAddScreen,
+                            //navToAdd,
                             { viewModel.updateTodoItem(it) },
                             { viewModel.formatDate(it) },
-                            { flag, relevance -> viewModel.designOfCheckboxes(flag, relevance) })
+                            { flag, relevance ->
+                                viewModel.designOfCheckboxes(
+                                    flag,
+                                    relevance
+                                )
+                            })
                     }
                     item {
-                        NewTaskItem { viewModel.updateTasks() }
+                        UpdateTaskItem { viewModel.updateTasks() }
                     }
-
                 }
                 if (todoItemScreenUiState.value.errorMessage != null) {
                     SnackbarForError(viewModel)
@@ -136,27 +184,41 @@ fun TodoListScreen(
 
 
 @Composable
-fun NewTaskItem(
-    onClick: () -> Unit,
+fun UpdateTaskItem(
+    onClick: () -> Unit
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface)
-            .focusable(true)
-            .clickable { onClick() }
-            .padding(horizontal = 16.dp, vertical = 12.dp),
-        horizontalArrangement = Arrangement.Start
-    ) {
-        //Spacer(modifier = Modifier.width(36.dp))
-        Text(
-            modifier = Modifier,
-            text = stringResource(id = R.string.update),
-            color = MaterialTheme.colorScheme.primary,
-            //style = TasksTheme.typography.body,
+    Button(
+        onClick = { onClick },
+        elevation = ButtonDefaults.elevatedButtonElevation(
+            defaultElevation = 0.dp,
+            pressedElevation = 32.dp
+        ),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.surface
         )
+        //modifier = Modifier.background(MaterialTheme.colorScheme.background)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surface)
+                .focusable(true)
+                .animateContentSize()
+                //.clickable { onClick() }
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            horizontalArrangement = Arrangement.Start,
+
+            ) {
+            Text(
+                text = stringResource(id = R.string.update),
+                color = MaterialTheme.colorScheme.primary,
+                //style = TasksTheme.typography.body,
+            )
+        }
     }
 }
+
+
 /*
 @Composable
 fun HeaderWithAnimation() {
