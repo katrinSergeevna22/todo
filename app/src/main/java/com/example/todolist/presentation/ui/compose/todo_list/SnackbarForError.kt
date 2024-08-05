@@ -60,12 +60,11 @@ fun SnackbarForError(viewModel: ListViewModel) {
                 ) {
                     Icon(
                         Icons.Default.Close,
-                        contentDescription = "Close",
+                        contentDescription = stringResource(id = R.string.descriptionButtonSnackbarClose),
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
             }
         }
     }
-
 }

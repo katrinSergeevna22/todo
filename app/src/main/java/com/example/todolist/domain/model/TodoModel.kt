@@ -18,7 +18,7 @@ data class TodoModel(
     val id: UUID,
     var text: String,
     var relevance: Relevance,
-    var deadline: Long? = null,
+    var deadline: Long? = 0L,
     var executionFlag: Boolean,
     val dateOfCreating: Long,
     var dateOfEditing: Long? = null,

@@ -2,15 +2,10 @@ package com.example.todolist.presentation.ui.compose.divKit
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import android.view.ContextThemeWrapper
 import android.view.View
 import android.widget.LinearLayout
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.todolist.divKit.AssetReader
 import com.example.todolist.divKit.Div2ViewFactory
@@ -66,13 +61,6 @@ private fun createDivConfiguration(
 ): DivConfiguration {
     return DivConfiguration.Builder(PicassoDivImageLoader(context))
         .actionHandler(SampleDivActionHandler(onBack))
-//            .extension(
-//                DivPinchToZoomExtensionHandler(
-//                    DivPinchToZoomConfiguration.Builder(this).build()
-//                )
-//            )
-//            .divCustomContainerViewAdapter(RiveCustomViewAdapter.Builder(this, OkHttpDivRiveNetworkDelegate(
-//                OkHttpClient.Builder().build())).build())
         .visualErrorsEnabled(true)
         .build()
 }

@@ -26,5 +26,4 @@ object DatabaseModule {
             AppDatabase::class.java,
             "task_database"
         ).build()
-
 }

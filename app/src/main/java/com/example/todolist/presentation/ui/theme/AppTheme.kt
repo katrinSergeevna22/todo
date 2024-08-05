@@ -26,7 +26,10 @@ fun ColorPalettePreview() {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text(text = stringResource(id = R.string.lightThemePalitra), modifier = Modifier.padding(16.dp))
+        Text(
+            text = stringResource(id = R.string.lightThemePalette),
+            modifier = Modifier.padding(16.dp)
+        )
 
         Box(
             modifier = Modifier
@@ -34,7 +37,6 @@ fun ColorPalettePreview() {
                 .padding(bottom = 8.dp)
         ) {
             Row(
-                //modifier = Modifier.fillMaxSize(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 listOf(
@@ -55,7 +57,6 @@ fun ColorPalettePreview() {
                 .height(50.dp)
         ) {
             Row(
-                //modifier = Modifier.fillMaxSize().padding(bottom = 16.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 listOf(
@@ -78,7 +79,6 @@ fun ColorPalettePreview() {
                 .height(50.dp)
         ) {
             Row(
-                //modifier = Modifier.fillMaxSize().padding(bottom = 16.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 listOf(
@@ -104,7 +104,6 @@ fun ColorPalettePreview() {
                 .height(50.dp)
         ) {
             Row(
-                //modifier = Modifier.fillMaxSize().padding(bottom = 16.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 listOf(
@@ -112,7 +111,7 @@ fun ColorPalettePreview() {
                     Colors.LightThemeBackSecondaryColor,
                     Colors.LightThemeBackElevatedColor,
 
-                ).forEach { color ->
+                    ).forEach { color ->
                     Box(
                         modifier = Modifier
                             .size(50.dp)
@@ -124,7 +123,10 @@ fun ColorPalettePreview() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(text = stringResource(id = R.string.darkThemePalitra), modifier = Modifier.padding(16.dp))
+        Text(
+            text = stringResource(id = R.string.darkThemePalette),
+            modifier = Modifier.padding(16.dp)
+        )
 
         Box(
             modifier = Modifier
@@ -132,7 +134,6 @@ fun ColorPalettePreview() {
                 .padding(bottom = 8.dp)
         ) {
             Row(
-                //modifier = Modifier.fillMaxSize(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 listOf(
@@ -153,7 +154,6 @@ fun ColorPalettePreview() {
                 .height(50.dp)
         ) {
             Row(
-                //modifier = Modifier.fillMaxSize().padding(bottom = 16.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 listOf(
@@ -176,7 +176,6 @@ fun ColorPalettePreview() {
                 .height(50.dp)
         ) {
             Row(
-                //modifier = Modifier.fillMaxSize().padding(bottom = 16.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 listOf(
@@ -202,7 +201,6 @@ fun ColorPalettePreview() {
                 .height(50.dp)
         ) {
             Row(
-                //modifier = Modifier.fillMaxSize().padding(bottom = 16.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 listOf(
@@ -222,7 +220,8 @@ fun ColorPalettePreview() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(text = "Текстовые стили", modifier = Modifier.padding(16.dp))
+        Text(text = stringResource(id = R.string.textStyle), modifier = Modifier.padding(16.dp))
+
         // Текстовые стили
         Text(
             text = "Large title",

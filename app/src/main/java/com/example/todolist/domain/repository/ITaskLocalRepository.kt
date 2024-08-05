@@ -5,12 +5,17 @@ import com.example.todolist.domain.Relevance
 import com.example.todolist.domain.model.DataState
 import com.example.todolist.domain.model.TodoModel
 import kotlinx.coroutines.flow.Flow
-import java.util.UUID
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 interface ITaskLocalRepository {
-    fun getTasks(): Flow<DataState<List<TodoModel>>>
+    private val _remoteDataFlow: MutableStateFlow<TodoItemScreenUiState>
+        get() = MutableStateFlow(TodoItemScreenUiState())
+    val remoteDataFlow: StateFlow<TodoItemScreenUiState>
+        get() = _remoteDataFlow.asStateFlow()
 
-    //fun getTask(id: UUID): Flow<TodoItemScreenUiState>
+    fun getTasks(): Flow<DataState<List<TodoModel>>>
 
     suspend fun addTask(text: String, priority: Relevance, deadline: Long?)
 

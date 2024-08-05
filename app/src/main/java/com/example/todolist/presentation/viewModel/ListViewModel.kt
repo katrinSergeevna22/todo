@@ -1,29 +1,25 @@
 package com.example.todolist.presentation.viewModel
 
-import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todolist.R
-import com.example.todolist.domain.model.TodoModel
 import com.example.todolist.data.network.util.TodoItemScreenUiState
-
+import com.example.todolist.data.repository.RemoteRepository
+import com.example.todolist.domain.Relevance
+import com.example.todolist.domain.VariantFunction
+import com.example.todolist.domain.errorHandling.ErrorHandlingImpl
+import com.example.todolist.domain.model.DataState
+import com.example.todolist.domain.model.TodoModel
+import com.example.todolist.domain.providers.IStringProvider
+import com.example.todolist.domain.repository.ISettingRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import com.example.todolist.data.repository.RemoteRepository
-import com.example.todolist.domain.Relevance
-import com.example.todolist.domain.VariantFunction
-import com.example.todolist.domain.model.DataState
-import com.example.todolist.domain.repository.ISettingRepository
-import com.example.todolist.domain.errorHandling.ErrorHandlingImpl
-import com.example.todolist.domain.providers.IStringProvider
-import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -32,7 +28,7 @@ import javax.inject.Inject
 
 /**
  * ListViewModel is the main ViewModel in the application, which contains all the basic business logic
- * @param repositoru Managing the data received from the server
+ * @param repository Managing the data received from the server
  * */
 @HiltViewModel
 class ListViewModel @Inject constructor(
@@ -94,7 +90,7 @@ class ListViewModel @Inject constructor(
         }
     }
 
-    private fun fetchState() {
+    fun fetchState() {
         viewModelScope.launch {
             repository.getTasks().collect { state ->
                 when (state) {
